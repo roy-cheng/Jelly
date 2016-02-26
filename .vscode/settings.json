@@ -1,0 +1,15 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/.temp": true,
+        "**/node_modules": true,
+        "**/typings": true,
+        "**/bower_components": true,
+        "server/res": true,
+        "server/core": true,
+        "server/data": true,
+        "webapp": true
+    }
+}

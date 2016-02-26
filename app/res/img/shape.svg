@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4 (15575) - http://www.bohemiancoding.com/sketch -->
+    <title>形状_24</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="新界面icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="形状_24" sketch:type="MSArtboardGroup" fill="#5C81CC">
+            <path d="M16,6.01293206 L16,1 L1,1 L1,16 L6.01293206,16 C6.00434618,15.8344194 6,15.6677173 6,15.5 C6,10.2532949 10.2532949,6 15.5,6 C15.6677173,6 15.8344194,6.00434618 16,6.01293206 Z M15.5,23 C19.6421356,23 23,19.6421356 23,15.5 C23,11.3578644 19.6421356,8 15.5,8 C11.3578644,8 8,11.3578644 8,15.5 C8,19.6421356 11.3578644,23 15.5,23 Z" id="icon_形状" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

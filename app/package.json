@@ -1,0 +1,13 @@
+{
+  "name": "boethiah-desktop",
+  "version": "1.0.0",
+  "description": "A Roy Cheng's application",
+  "main": "app.js",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "dependencies": {
+    "fs-plus": "^2.8.2",
+    "jquery": "^2.2.3",
+    "unzip": "^0.1.11",
+    "xmldom": "^0.1.22"
+  }
+}

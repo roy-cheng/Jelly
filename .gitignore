@@ -1,0 +1,13 @@
+node_modules
+.test
+bower_components
+.temp
+temp
+local
+server/res
+/*.DS_Store
+/.idea/.DS_Store
+/.idea/*.DS_Store
+/webapp
+/server/core
+typings

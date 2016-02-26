@@ -1,0 +1,11 @@
+{
+  "name": "boethiah",
+  "version": "1.0.0",
+  "description": "A cross-platform EasiNote client.",
+  "license": "LICENSE.md",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "typings": "^0.8.1"
+  }
+}

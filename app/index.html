@@ -1,0 +1,121 @@
+<html>
+
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
+  <link rel="stylesheet" href="res/css/style.css" type="text/css" />
+  <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div id="titlebar">
+      <div id="logo"><img src="res/img/logo.svg" /><span>希沃教学白板</span></div>
+      <p id="title"><img src="res/img/doc.svg" /><span>课件</span></p>
+      <p id="system-buttons">
+        <img src="res/img/system-min.svg" id="system-min" />
+        <img src="res/img/system-max.svg" id="system-max" />
+        <img src="res/img/system-restore.svg" id="system-restore" />
+        <img src="res/img/system-close.svg" id="system-close" /></p>
+    </div>
+    <div id="header">
+      <div id="toolbar">
+        <div id="left-toolbar" class="left-column">
+          <div class="toolbar-button" id="file-list-button">
+            <img class="button-bg" src="res/img/Cloud.svg" alt="云课件" />
+            <div>云课件</div>
+          </div>
+          <div class="toolbar-button" id="sync-button">
+            <img class="button-bg" src="res/img/Sync.svg" alt="同步" />
+            <div>同步</div>
+          </div>
+        </div>
+        <div id="center-toolbar" class="center-column">
+          <div id="display-button-container" class="hightlight-button-container">
+            <div id="display-button" class="hightlight-button">
+              <img src="res/img/display.svg" />
+              <span>开始授课</span></div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="res/img/Text.svg" alt="文本" />
+            <div>文本</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="res/img/Shape.svg" alt="形状" />
+            <div>形状</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="res/img/Picture.svg" alt="图片" />
+            <div>图片</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="res/img/mindmap.svg" alt="思维导图" />
+            <div>思维导图</div>
+          </div>
+        </div>
+        <div id="right-toolbar" class="right-column">
+          <div class="toolbar-button">
+            <img class="button-bg" src="res/img/attribute.svg" alt="属性" />
+            <div>属性</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="res/img/animation.svg" alt="动画" />
+            <div>动画</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="content">
+      <div id="slide-panel" class="left-column">
+        <ul id="thumbnails">
+          <ul>
+      </div>
+      <div id="workspace" class="center-column">
+        <div id="board-container">
+          <svg id="board" viewBox="0 0 1280 720">
+            <use xlink:href="#slide" />
+          </svg>
+        </div>
+        <svg class="hide">
+          <symbol id="slide">
+            <g fill="white">
+              <rect width="1280" height="720" />
+            </g>
+          </symbol>
+        </svg>
+      </div>
+      <div id="property-panel" class="right-column"></div>
+    </div>
+    <div id="footer">
+    </div>
+  </div>
+  <div id="file-list-panel">
+    <div id="file-list-panel-header">
+      <div id="file-list-panel-title-bar">
+        <div id="file-list-panel-title-bar-left">
+          <p>
+            <img src="res/img/Cloud.svg" />
+            <span>希沃云课件</span>
+          </p>
+        </div>
+        <div id="file-list-panel-title-bar-right">
+          <p>
+            <img src="res/img/ulink.svg" />
+            <span>制作快联</span>
+            <img id="file-list-panel-minimize" src="res/img/minimize.svg" />
+            <img id="file-list-panel-close" src="res/img/close.svg" />
+          </p>
+        </div>
+      </div>
+      <div id="file-list-panel-top-bar">
+        <div id="new-button-container" class="hightlight-button-container">
+          <div id="new-button" class="hightlight-button">
+            <img src="res/img/add.svg" />
+            <span>新建课件</span></div>
+        </div>
+      </div>
+      <div id=file-list></div>
+    </div>
+  </div>
+</body>
+
+</html>

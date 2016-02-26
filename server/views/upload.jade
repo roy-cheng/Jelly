@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= 'upload'
+  p= msg
+  form(method='post', enctype="multipart/form-data" action="/api/upload")
+    input(type='file', name='enbx')
+    input(type='submit', value='upload')
