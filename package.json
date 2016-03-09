@@ -2,9 +2,9 @@
   "name": "Jelly",
   "version": "1.0.0",
   "description": "A Roy Cheng's Electron application",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron src/main.js"
   },
   "repository": {
     "type": "git",
