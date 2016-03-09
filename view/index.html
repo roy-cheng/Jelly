@@ -1,69 +1,32 @@
-<!DOCTYPE html>
 <html>
-  <head>    
-    <meta charset="UTF-8">
-    <title>Jelly Baiban</title>
-    <link rel="stylesheet" href="../css/lc.css" type="text/css">
-    <style>
-      html, body { margin:0; padding:0; width:100%; height:100%; }
-    </style>
-    <script src="../lib/literallycanvas-core.js"></script>
-    <script type="text/javascript" src="../lib/jquery.js"> </script>
-    <script type="text/javascript" src="../src/layout.js"> </script>
-    <script type="text/javascript">
-        if(!window.$){
-            window.$ = window.jQuery = require('./../lib/jquery.js');
-        }
-        
-        function init(){
-            update()
-            var lc = LC.init(document.getElementById('conterner'), {imageSize: {width: null, height: null}});
-            var tools = [
-            {
-                name: 'pencil',
-                el: document.getElementById('tool-pencil'),
-                tool: new LC.tools.Pencil(lc)
-            },
-            {
-                name: 'eraser',
-                el: document.getElementById('tool-eraser'),
-                tool: new LC.tools.Eraser(lc)
-            }
-            ];
-
-            var activateTool = function(t) {
-                lc.setTool(t.tool);
-
-                tools.forEach(function(t2) {
-                if (t == t2) {
-                    t2.el.style.backgroundColor = 'yellow';
-                } else {
-                    t2.el.style.backgroundColor = 'transparent';
-                }
-                });
-            }
-
-            tools.forEach(function(t) {
-                t.el.style.cursor = "pointer";
-                t.el.onclick = function(e) {
-                    e.preventDefault();
-                    activateTool(t);
-                };
-            });
-            activateTool(tools[0]);
-        }
-        
-        $(document).ready(function() {
-            init();
-        });
-    </script>
-  </head>
-  <body>
-    <div id="conterner"></div>
-    <div class="tools">
-    <a id="tool-pencil">pencil</a>
-    |
-    <a id="tool-eraser">eraser</a>
+<head>
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <script type="text/javascript" src="../lib/jquery.js"></script>
+  <script type="text/javascript" src="../src/start.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="header"></div>
+    <div id="content">
+      <div id="sidebar"></div>
+      <div id="main">
+        <div id="board-container">
+          <svg id="board" viewBox="0 0 1920 1080">
+            <use xlink:href="#slide" />
+          </svg>
+        </div>
+        <svg class="defs-only" xmlns="http://www.w3.org/2000/svg">
+          <symbol id="slide">
+            <g fill="white">
+              <rect width="1920" height="1080" />
+            </g>
+          </symbol>
+        </svg>
+      </div>
+      <div id="property-panel"></div>
     </div>
-  </body>
+    <div id="footer">
+    </div>
+  </div>
+</body>
 </html>
