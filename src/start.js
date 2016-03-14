@@ -55,8 +55,38 @@ function parseElement(element) {
     table[element.tagName](element);
 }
 
-function parseText(text) {
-    console.log(text);
+function parseText(element) {
+    var xml2js = require("xml2js");
+    xml2js.parseString(element.outerHTML, function (err, result) {
+        var data = result.Text;
+        var model = {
+            x: parseFloat(data.X[0]),
+            y: parseFloat(data.Y[0]),
+            width: parseFloat(data.Width[0]),
+            height: parseFloat(data.Height[0]),
+        }
+        var richTextModel = data.RichText[0];
+        model.text = richTextModel.Text[0];
+        model.textLines = [];
+        var textLineModels = richTextModel.TextLines[0].TextLine;
+        for (var i = 0; i < textLineModels.length; i++) {
+            var textLine = {textRuns: []};
+            model.textLines.push(textLine);
+            var textRunModels = textLineModels[i].TextRuns[0].TextRun;
+            for (var j = 0; j < textRunModels.length; j++) {
+                var textRunModel = textRunModels[j];
+                var textRun = {
+                    text: textRunModel.Text[0],
+                    foneSize: textRunModel.FontSize[0],
+                    foneFamily: textRunModel.FontFamily[0],
+                    background: color(textRunModel.Background[0]),
+                    foreground: color(textRunModel.Foreground[0]),
+                };
+                textLine.textRuns.push(textRun);
+            }
+        }
+        console.log(model);
+    });
 }
 
 function parseShape(element) {
@@ -68,10 +98,10 @@ function parseShape(element) {
             y: parseFloat(data.Y[0]),
             width: parseFloat(data.Width[0]),
             height: parseFloat(data.Height[0]),
-            background: data.Background[0].ColorBrush[0],
-            foreground: data.Foreground[0].ColorBrush[0],
+            background: color(data.Background[0]),
+            foreground: color(data.Foreground[0]),
             thickness: parseFloat(data.Thickness[0]),
-        }
+        };
         var s = Snap("#board");
         var rect = s.rect(model.x, model.y, model.width, model.height);
         rect.attr({
@@ -80,4 +110,8 @@ function parseShape(element) {
             strokeWidth: model.thickness
         });
     });
+}
+
+function color(element){
+    return element.ColorBrush[0].substr(3);
 }
