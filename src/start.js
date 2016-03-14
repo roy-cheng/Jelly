@@ -1,47 +1,83 @@
+"use strict";
+
 if (!$) {
-  var $ = require('../lib/jquery.js');
+    var $ = require('../lib/jquery.js');
 }
 var model = require('../src/elements.js');
 
 function updateLayout() {
-  var outterElement = $("#main");
-  var container = $("#board-container");
-  container.stop();
-  container.animate({
-    width: outterElement.width(),
-    height: outterElement.height()
-  }, 200);
+    var $outterElement = $("#main");
+    var $container = $("#board-container");
+    $container.stop();
+    $container.animate({
+        width: $outterElement.width(),
+        height: $outterElement.height()
+    }, 200);
 }
 
-window.onresize = function (event) {
-  updateLayout();
+window.onresize = function () {
+    updateLayout();
 };
 
 $(document).ready(function () {
-  updateLayout();
+    updateLayout();
 
-  if (require) {
+    var win = nw.Window.get();
+    win.showDevTools();
     load('E:/Code/enbx/Slides/Slide_0.xml')
-  }
 });
 
 function load(file) {
-  var fs = require('fs'),
-    xml2js = require('xml2js');
-
-  fs.readFile(file, function (err, data) {
-    model.parseSlide(data);
-  });
+    var fs = require('fs');
+    fs.readFile(file, function (err, data) {
+        parseSlide(data);
+    });
 }
 
-function parseSlide(slide) {
-  var elements = slide.Elements[0];
-  var shapes = elements.Shape;
-  shapes.forEach(function(s) {
-    parseShape(s);
-  }, this);
+function parseSlide(slideXmlString) {
+    var parser = new DOMParser();
+    var xmlDom = parser.parseFromString(slideXmlString, "text/xml");
+    var slide = xmlDom.documentElement;
+    var elements = slide.getElementsByTagName("Elements")[0].childNodes;
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].nodeType !== 1)
+            continue;
+
+        parseElement(elements[i]);
+    }
 }
 
-function parseShape(shape){
-  console.log(shape);
+function parseElement(element) {
+    var table = {
+        Text: parseText,
+        Shape: parseShape
+    };
+    table[element.tagName](element);
+}
+
+function parseText(text) {
+    console.log(text);
+}
+
+function parseShape(element) {
+    var xml2js = require("xml2js");
+    xml2js.parseString(element.outerHTML, function (err, result) {
+        var data = result.Shape;
+        var model = {
+            x: parseFloat(data.X[0]),
+            y: parseFloat(data.Y[0]),
+            width: parseFloat(data.Width[0]),
+            height: parseFloat(data.Height[0]),
+            background: data.Background[0].ColorBrush[0],
+            foreground: data.Foreground[0].ColorBrush[0],
+            thickness: parseFloat(data.Thickness[0]),
+        }
+        var s = Snap("#board");
+        var rect = s.rect(model.x, model.y, model.width, model.height);
+        rect.attr({
+            fill: model.background.substr(3),
+            stroke: model.foreground.substr(3),
+            strokeWidth: model.thickness
+        });
+    });
 }

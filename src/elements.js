@@ -31,14 +31,6 @@ class Rectangle extends Shape {
     }
 }
 
-exports.parseSlide = function (xmlString){
-    if (window.DOMParser)
-    {
-        var parser=new DOMParser();
-        var xmlDoc=parser.parseFromString(txt,"text/xml");
-        console.log(xmlDocvar );
-    }
-}
 
 
 

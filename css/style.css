@@ -31,6 +31,8 @@ html, body {
 #main {
   -webkit-box-flex: 1;
   margin:25px;
+  min-width: 192px;
+  min-height: 108px;
 }
 
 #property-panel {
