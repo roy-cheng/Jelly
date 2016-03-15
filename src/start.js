@@ -23,7 +23,7 @@ $(document).ready(function () {
     updateLayout();
 
     var win = nw.Window.get();
-    win.showDevTools();
+    //win.showDevTools();
     load('E:/Code/enbx/Slides/Slide_0.xml')
 });
 

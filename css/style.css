@@ -16,6 +16,36 @@ html, body {
   background-color: #f7f8fa;
 }
 
+#ToolsDiv{
+  margin: 16px;
+}
+
+.HeaderToolContainerDiv{
+  border-radius: 4px;
+  -webkit-box-shadow:0px 0px 6px #aaa;
+  background: #f9f9f9;
+  width: 48px;
+  height:32px;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.HeaderToolContainerDiv:hover{
+  background: #ffffff;
+}
+.HeaderToolContainerDiv:active{
+  background: #f1f1f1;
+}
+
+.ToolImg{
+  width:24px;
+  height:24px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left:12px;
+  margin-right: 12px;
+}
+
 #content {
   -webkit-box-flex: 1;
   display: -webkit-box;
