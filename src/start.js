@@ -6,7 +6,7 @@ if (!$) {
 var model = require('../src/elements.js');
 
 function updateLayout() {
-    var $outterElement = $("#main");
+    var $outterElement = $("#workspace");
     var $container = $("#board-container");
     $container.stop();
     $container.animate({

@@ -14,36 +14,9 @@ html, body {
 #header {
   height: 62px;
   background-color: #f7f8fa;
-}
-
-#ToolsDiv{
-  margin: 16px;
-}
-
-.HeaderToolContainerDiv{
-  border-radius: 4px;
-  -webkit-box-shadow:0px 0px 6px #aaa;
-  background: #f9f9f9;
-  width: 48px;
-  height:32px;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-.HeaderToolContainerDiv:hover{
-  background: #ffffff;
-}
-.HeaderToolContainerDiv:active{
-  background: #f1f1f1;
-}
-
-.ToolImg{
-  width:24px;
-  height:24px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  margin-left:12px;
-  margin-right: 12px;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
 }
 
 #content {
@@ -53,35 +26,72 @@ html, body {
   -webkit-box-align: stretch;
 }
 
-#sidebar {
-  width: 154px;
-  background-color: #dfe1e6;
-}
-
-#main {
-  -webkit-box-flex: 1;
-  margin:25px;
-  min-width: 192px;
-  min-height: 108px;
-}
-
-#property-panel {
-  width: 265px;
-  background-color: #dfe1e6;
-}
-
 #footer {
   height: 22px;
   background-color: #ebeced;
 }
 
-svg.defs-only { 
-  display:none; 
+.left-column{
+  width: 154px;
 }
-#board-container { 
+.center-column {
+  -webkit-box-flex: 1;
+}
+.right-column {
+  width: 265px;
+}
+
+#toolbar{
+  -webkit-box-flex: 1;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: center;
+}
+#left-toolbar{
+  display: flex;
+}
+#center-toolbar{
+  display: flex;
+  justify-content: center;
+}
+#right-toolbar{
+}
+.toolbar-button{
+  border-radius: 4px;
+  -webkit-box-shadow:0px 0px 6px #aaa;
+  background: #f9f9f9;
+  width: 48px;
+  height:32px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.toolbar-button:hover{
+  background: #ffffff;
+}
+.button-bg{
+  width:24px;
+  height:24px;
+  margin: 4px 12px;
+}
+
+#slide-panel {
+  background-color: #dfe1e6;
+}
+#workspace {
+  margin:25px;
+  min-width: 192px;
+  min-height: 108px;
+}
+#board-container {
   margin:auto;
 }
-#board { 
-  width:100%; 
+#board {
+  width:100%;
   height:100%;
+}
+#property-panel {
+  background-color: #dfe1e6;
+}
+.hide {
+  display:none; 
 }

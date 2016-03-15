@@ -1,56 +1,60 @@
 <html>
 <head>
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
-  <script type="text/javascript" src="../lib/jquery.js"></script>
-  <script type="text/javascript" src="../lib/snap.svg.js"></script>
-  <script type="text/javascript" src="../src/start.js"></script>
+    <link rel="stylesheet" href="../css/style.css" type="text/css"/>
+    <script type="text/javascript" src="../lib/jquery.js"></script>
+    <script type="text/javascript" src="../lib/snap.svg.js"></script>
+    <script type="text/javascript" src="../src/start.js"></script>
 </head>
 <body>
-  <div id="app">
+<div id="app">
     <div id="header">
-      <div id="ToolsDiv">
-        <div class="HeaderToolContainerDiv">
-          <img class="ToolImg" src="../Resources/Images/Cloud.svg" alt="云课件">
+        <div id="toolbar">
+            <div id="left-toolbar" class="left-column">
+                <div class="toolbar-button">
+                    <img class="button-bg" src="../Resources/Images/Cloud.svg" alt="云课件">
+                </div>
+                <div class="toolbar-button">
+                    <img class="button-bg" src="../Resources/Images/Sync.svg" alt="同步">
+                </div>
+            </div>
+            <div id="center-toolbar" class="center-column">
+                <div class="toolbar-button">
+                    <img class="button-bg" src="../Resources/Images/Text.svg" alt="文本">
+                </div>
+                <div class="toolbar-button">
+                    <img class="button-bg" src="../Resources/Images/Picture.svg" alt="图片">
+                </div>
+                <div class="toolbar-button">
+                    <img class="button-bg" src="../Resources/Images/Shape.svg" alt="形状">
+                </div>
+                <div class="toolbar-button">
+                    <img class="button-bg" src="../Resources/Images/Multimedia.svg" alt="多媒体">
+                </div>
+            </div>
+            <div id="right-toolbar" class="right-column">
+            </div>
         </div>
-        <div class="HeaderToolContainerDiv">
-          <img class="ToolImg" src="../Resources/Images/Sync.svg" alt="同步">
-        </div>
-        <div id="MiddleToolsDiv" style="padding: 4px 0;">
-          <div class="HeaderToolContainerDiv">
-            <img class="ToolImg" src="../Resources/Images/Text.svg" alt="文本">
-          </div>
-          <div class="HeaderToolContainerDiv">
-            <img class="ToolImg" src="../Resources/Images/Picture.svg" alt="图片">
-          </div>
-          <div class="HeaderToolContainerDiv">
-            <img class="ToolImg" src="../Resources/Images/Shape.svg" alt="形状">
-          </div>
-          <div class="HeaderToolContainerDiv">
-            <img class="ToolImg" src="../Resources/Images/Multimedia.svg" alt="多媒体">
-          </div>
-        </div>
-      </div>
     </div>
     <div id="content">
-      <div id="sidebar"></div>
-      <div id="main">
-        <div id="board-container">
-          <svg id="board" viewBox="0 0 1920 1080">
-            <use xlink:href="#slide" />
-          </svg>
+        <div id="slide-panel" class="left-column"></div>
+        <div id="workspace" class="center-column">
+            <div id="board-container">
+                <svg id="board" viewBox="0 0 1920 1080">
+                    <use xlink:href="#slide"/>
+                </svg>
+            </div>
+            <svg class="hide" xmlns="http://www.w3.org/2000/svg">
+                <symbol id="slide">
+                    <g fill="white">
+                        <rect width="1920" height="1080"/>
+                    </g>
+                </symbol>
+            </svg>
         </div>
-        <svg class="defs-only" xmlns="http://www.w3.org/2000/svg">
-          <symbol id="slide">
-            <g fill="white">
-              <rect width="1920" height="1080" />
-            </g>
-          </symbol>
-        </svg>
-      </div>
-      <div id="property-panel"></div>
+        <div id="property-panel" class="right-column"></div>
     </div>
     <div id="footer">
     </div>
-  </div>
+</div>
 </body>
 </html>
