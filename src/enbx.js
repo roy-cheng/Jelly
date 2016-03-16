@@ -1,6 +1,7 @@
 var fs = require('fs'),
     xml2js = require('xml2js'),
-    unzip = require('unzip');
+    unzip = require('unzip'),
+    Snap = require('snapsvg');
 
 function open(file) {
     fs.createReadStream(file).pipe(unzip.Extract({path: '.test/test.enbx.unzip/'}).on('close', function(){

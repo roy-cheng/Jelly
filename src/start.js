@@ -21,9 +21,6 @@ window.onresize = function () {
 $(document).ready(function () {
     updateLayout();
 
-    var win = nw.Window.get();
-    win.showDevTools();
-
     var enbx = require('../src/enbx.js');
-    enbx.open('.test/test.enbx.js')
+    enbx.open('.test/test.enbx')
 });

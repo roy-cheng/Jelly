@@ -2,5 +2,8 @@
   "name": "Jelly",
   "version": "1.0.0",
   "description": "A Roy Cheng's application",
-  "main": "./view/index.html"
+  "main": "./src/electron.js",
+  "dependencies": {
+    "snapsvg": "sethvincent/Snap.svg#a34b8af69b"
+  }
 }
