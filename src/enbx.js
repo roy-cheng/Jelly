@@ -1,17 +1,25 @@
 var fs = require('fs'),
     xml2js = require('xml2js'),
     unzip = require('unzip'),
-    Snap = require('snapsvg');
+    Snap = require('snapsvg'),
+    path = require('path');
 
-function open(file) {
-    fs.createReadStream(file).pipe(unzip.Extract({path: '.test/test.enbx.unzip/'}).on('close', function(){
-        fs.readFile('.test/test.enbx.unzip/Slides/Slide_0.xml', function (err, data) {
-            parseSlide(data);
-        });
-    }));
+var unzipDir = '.test/test.enbx.unzip/';
+function rel(p){
+    return path.resolve(unzipDir + p);
 }
 
-function parseSlide(slideXmlString) {
+function open(file) {
+    parseReference(refs=>{
+        fs.createReadStream(file).pipe(unzip.Extract({path: unzipDir}).on('close', function () {
+            fs.readFile(rel('Slides/Slide_0.xml'), function (err, data) {
+                parseSlide(data, refs);
+            });
+        }));
+    });
+}
+
+function parseSlide(slideXmlString, refs) {
     var parser = new DOMParser();
     var xmlDom = parser.parseFromString(slideXmlString, 'text/xml');
     var slide = xmlDom.documentElement;
@@ -19,23 +27,23 @@ function parseSlide(slideXmlString) {
     for (var i = 0; i < elements.length; i++) {
         if (elements[i].nodeType !== 1)
             continue;
-        try{
-            parseElement(elements[i]);
-        }catch (err){
-            console.log('Parsing failed:'+err.toString());
+        try {
+            parseElement(elements[i], refs);
+        } catch (err) {
+            console.log('Parsing failed:' + err.toString());
             console.log(elements[i]);
         }
     }
     drawGrid();
 }
 
-function parseElement(element) {
+function parseElement(element, refs) {
     var table = {
         Text: parseText,
         Shape: parseShape,
         Picture: parsePicture
     };
-    table[element.tagName](element);
+    table[element.tagName](element, refs);
 }
 
 function parseText(element) {
@@ -84,8 +92,8 @@ function parseText(element) {
             }
             var box = t.getBBox();
             t.attr({
-                x: model.x +(model.x-box.x),
-                y: model.y +(model.y-box.y)
+                x: model.x + (model.x - box.x),
+                y: model.y + (model.y - box.y)
             });
         }
     });
@@ -114,7 +122,7 @@ function parseShape(element) {
     });
 }
 
-function parsePicture(element) {
+function parsePicture(element, refs) {
     xml2js.parseString(element.outerHTML, function (err, result) {
         var data = result.Picture;
         var model = {
@@ -123,12 +131,11 @@ function parsePicture(element) {
             width: parseFloat(data.Width[0]),
             height: parseFloat(data.Height[0]),
             pictureName: data.PictureName[0],
-            source: data.Source[0],
+            source: rel(refs[data.Source[0].substr(5)]),
         };
-        console.log(model)
 
-        //var s = Snap('#board');
-        //var rect = s.rect(model.x, model.y, model.width, model.height);
+        var s = Snap('#board');
+        var rect = s.image(model.source, model.x, model.y, model.width, model.height);
         //rect.attr({
         //    fill: model.background,
         //    stroke: model.foreground,
@@ -137,9 +144,22 @@ function parsePicture(element) {
     });
 }
 
-function parseReference(){
-    fs.readFile('.test/test.enbx.js.unzip/Slides/Slide_0.xml', function (err, data) {
-        parseSlide(data);
+function parseReference(func) {
+    fs.readFile('.test/test.enbx.unzip/Reference.xml', function (err, data) {
+        xml2js.parseString(data, function (err, result) {
+            var reference = result.Reference;
+            if (typeof reference.Relationships != "undefined") {
+                var relationships = reference.Relationships[0].Relationship;
+                var refs = [];
+                for (var i = 0; i < relationships.length; i++) {
+                    var r = relationships[i];
+                    refs[r.Id[0]] = r.Target[0];
+                }
+            }
+            if (typeof func != "undefined") {
+                func(refs);
+            }
+        });
     });
 
 }
