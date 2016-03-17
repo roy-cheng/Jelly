@@ -34,6 +34,12 @@ function parseSlide(slideXmlString, refs) {
             console.log(elements[i]);
         }
     }
+    xml2js.parseString(slideXmlString, function (err, result) {
+        console.log(result);
+        var background = color(result.Slide.Background[0]);
+        console.log(background);
+        $('#slide g').attr({fill: '#'+background});
+    });
     drawGrid();
 }
 
@@ -81,7 +87,7 @@ function parseText(element) {
             var texts = line.textRuns.map(function (x) {
                 return x.text
             });
-            var t = s.text(model.x, model.x, texts);
+            var t = s.text(model.x, model.y, texts);
             for (var j = 0; j < line.textRuns.length; j++) {
                 var run = line.textRuns[j];
                 t.selectAll('tspan:nth-child(' + (j + 1) + ')').attr({
