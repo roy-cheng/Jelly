@@ -4,13 +4,16 @@ var fs = require('fs'),
     Snap = require('snapsvg'),
     path = require('path');
 
+var model = require('../src/model'),
+    view = require('../src/view');
+
 var unzipDir = '.test/test.enbx.unzip/';
-function rel(p){
+function rel(p) {
     return path.resolve(unzipDir + p);
 }
 
 function open(file) {
-    parseReference(refs=>{
+    parseReference(refs=> {
         fs.createReadStream(file).pipe(unzip.Extract({path: unzipDir}).on('close', function () {
             fs.readFile(rel('Slides/Slide_0.xml'), function (err, data) {
                 parseSlide(data, refs);
@@ -22,52 +25,28 @@ function open(file) {
 function parseSlide(slideXmlString, refs) {
     var parser = new DOMParser();
     var xmlDom = parser.parseFromString(slideXmlString, 'text/xml');
-    var slide = xmlDom.documentElement;
-    var elements = slide.getElementsByTagName('Elements')[0].childNodes;
-    for (var i = 0; i < elements.length; i++) {
-        if (elements[i].nodeType !== 1)
-            continue;
-        try {
-            parseElement(elements[i], refs);
-        } catch (err) {
-            console.log('Parsing failed:' + err.toString());
-            console.log(elements[i]);
-        }
-    }
-    xml2js.parseString(slideXmlString, function (err, result) {
-        console.log(result);
-        var background = color(result.Slide.Background[0]);
-        console.log(background);
-        $('#slide g').attr({fill: '#'+background});
-    });
-    drawGrid();
+    var xmlSlide = xmlDom.documentElement;
+    var slideModel = model.createModel(xmlSlide);
+    view.render(slideModel, refs);
 }
 
-function parseElement(element, refs) {
-    var table = {
-        Text: parseText,
-        Shape: parseShape,
-        Picture: parsePicture
-    };
-    table[element.tagName](element, refs);
-}
 
 function parseText(element) {
     xml2js.parseString(element.outerHTML, function (err, result) {
         var data = result.Text;
-        var model = {
+        var m = {
             x: parseFloat(data.X[0]),
             y: parseFloat(data.Y[0]),
             width: parseFloat(data.Width[0]),
             height: parseFloat(data.Height[0]),
         }
         var richTextModel = data.RichText[0];
-        model.text = richTextModel.Text[0];
-        model.textLines = [];
+        m.text = richTextModel.Text[0];
+        m.textLines = [];
         var textLineModels = richTextModel.TextLines[0].TextLine;
         for (var i = 0; i < textLineModels.length; i++) {
             var textLine = {textRuns: []};
-            model.textLines.push(textLine);
+            m.textLines.push(textLine);
             var textRunModels = textLineModels[i].TextRuns[0].TextRun;
             for (var j = 0; j < textRunModels.length; j++) {
                 var textRunModel = textRunModels[j];
@@ -82,8 +61,8 @@ function parseText(element) {
             }
         }
         var s = Snap('#board');
-        for (var i = 0; i < model.textLines.length; i++) {
-            var line = model.textLines[i];
+        for (var i = 0; i < m.textLines.length; i++) {
+            var line = m.textLines[i];
             var texts = line.textRuns.map(function (x) {
                 return x.text
             });
@@ -98,40 +77,17 @@ function parseText(element) {
             }
             var box = t.getBBox();
             t.attr({
-                x: model.x + (model.x - box.x),
-                y: model.y + (model.y - box.y)
+                x: m.x + (model.x - box.x),
+                y: m.y + (model.y - box.y)
             });
         }
-    });
-}
-
-function parseShape(element) {
-    xml2js.parseString(element.outerHTML, function (err, result) {
-        var data = result.Shape;
-        var model = {
-            x: parseFloat(data.X[0]),
-            y: parseFloat(data.Y[0]),
-            width: parseFloat(data.Width[0]),
-            height: parseFloat(data.Height[0]),
-            background: color(data.Background[0]),
-            foreground: color(data.Foreground[0]),
-            thickness: parseFloat(data.Thickness[0]),
-        };
-
-        var s = Snap('#board');
-        var rect = s.rect(model.x, model.y, model.width, model.height);
-        rect.attr({
-            fill: model.background,
-            stroke: model.foreground,
-            strokeWidth: model.thickness
-        });
     });
 }
 
 function parsePicture(element, refs) {
     xml2js.parseString(element.outerHTML, function (err, result) {
         var data = result.Picture;
-        var model = {
+        var m = {
             x: parseFloat(data.X[0]),
             y: parseFloat(data.Y[0]),
             width: parseFloat(data.Width[0]),
@@ -141,12 +97,7 @@ function parsePicture(element, refs) {
         };
 
         var s = Snap('#board');
-        var rect = s.image(model.source, model.x, model.y, model.width, model.height);
-        //rect.attr({
-        //    fill: model.background,
-        //    stroke: model.foreground,
-        //    strokeWidth: model.thickness
-        //});
+        s.image(m.source, m.x, m.y, m.width, m.height);
     });
 }
 
@@ -163,7 +114,12 @@ function parseReference(func) {
                 }
             }
             if (typeof func != "undefined") {
-                func(refs);
+                var resolver = {
+                    resolve: s=>{
+                        return rel(refs[s.substr(5)])
+                    }
+                }
+                func(resolver);
             }
         });
     });
@@ -201,5 +157,6 @@ function drawGrid() {
 function color(element) {
     return element.ColorBrush[0].substr(3);
 }
+
 
 exports.open = open;
