@@ -1,28 +1,28 @@
 var dataType = {
-    int: e=> parseInt(e.innerHTML),
-    float: e=> parseFloat(e.innerHTML),
-    boolean: e=> e.innerHTML.toLowerCase() == 'true',
-    string: e=> e.innerHTML,
-    brush: e=> e.getElementsByTagName('ColorBrush')[0].innerHTML.substr(3),
-    geometry: e=> e.getElementsByTagName('PresetGeometry')[0].getElementsByTagName('GeometryType')[0].innerHTML,
+    int: e => parseInt(e.innerHTML),
+    float: e => parseFloat(e.innerHTML),
+    boolean: e => e.innerHTML.toLowerCase() == 'true',
+    string: e => e.innerHTML,
+    brush: e => e.getElementsByTagName('ColorBrush')[0].innerHTML.substr(3),
+    geometry: e => e.getElementsByTagName('PresetGeometry')[0].getElementsByTagName('GeometryType')[0].innerHTML,
     model: modelOf,
     arrayOf: arrayOf
 };
 
 function modelOf(type, definition) {
-    if (type.constructor.name === 'Element') {
+    if (type instanceof Element) {
         return createModel(type);
     }
     else {
-        return function (element) {
+        return function(element) {
             return new Model(type, element, definition);
         }
     }
 }
 
 function arrayOf(type) {
-    return function (element) {
-        return Array.prototype.slice.call(element.children).map(x=>type(x));
+    return function(element) {
+        return Array.prototype.slice.call(element.children).map(x => type(x));
     }
 }
 
@@ -53,6 +53,9 @@ function Model(type, xmlElement, definition) {
 
         if (typeof converter !== 'undefined') {
             this[fieldName] = converter(childElement);
+            // if(converter.name === 'test'){
+            //     console.log('this[fieldName]='+this[fieldName]+', '+fieldName);
+            // }
         }
     }
 }
@@ -77,6 +80,17 @@ function defineElement() {
 }
 
 var definitions = [];
+definitions['Reference'] = {
+    relationships: dataType.arrayOf(dataType.model(
+        'Relationship',
+        {
+            id: dataType.string,
+            target: dataType.string
+        }))
+};
+definitions['Board'] = {
+    slides: dataType.arrayOf(dataType.string)
+};
 definitions['Slide'] = {
     id: dataType.string,
     width: dataType.float,
