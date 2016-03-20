@@ -1,3 +1,5 @@
+var Snap = require('snapsvg');
+
 function drawGrid() {
     var s = Snap('#board');
     for (var x = 100; x < 1280; x += 100) {
