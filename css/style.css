@@ -132,3 +132,31 @@ ul {
     width:100%;
     height:100%;
 }
+#file-list-panel{
+    position: absolute;
+    top: 55px;
+    left: 6px;
+    width:240px;
+    max-height:700px;
+    min-height:300px;
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    display: none;
+}
+#file-list-panel li{
+    height:30px;
+    background: white;
+    border: 1px solid #aaa;
+    font-size: 16px;
+    margin:0 auto;
+    padding:5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: hand;
+}
+#file-list-panel li:hover{
+    height:30px;
+    background: dodgerblue;
+}

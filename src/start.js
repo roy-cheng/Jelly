@@ -24,19 +24,39 @@ window.onresize = function() {
 $(document).ready(function() {
     updateLayout();
 
+    $('#file-list-button').click(() => {
+        console.log('down');
+        $('#file-list-panel').show();
+    });
+    $('#content').click(() => {
+        console.log('~down');
+        $('#file-list-panel').hide();
+    });
+
     var enbx = require('../src/enbx.js');
     enbx.open('.test/test.enbx')
+    enbx.listEnbxFiles();
 });
 
 $('html').keydown(function(event) {
     // F5
     if (event.keyCode === 116) {
         $('#board').addClass('fullscreen');
+        var remote = require('remote');
+        var win = remote.getCurrentWindow();
+        if (!win.isMaximized()) {
+            win.maximize();
+        }
         updateLayout();
     }
     // Esc
     if (event.keyCode === 27) {
         $('#board').removeClass('fullscreen');
+        var remote = require('remote');
+        var win = remote.getCurrentWindow();
+        if (win.isMaximized()) {
+            win.maximize();
+        }
         updateLayout();
     }
 });

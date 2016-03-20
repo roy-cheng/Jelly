@@ -1,61 +1,70 @@
 <html>
+
 <head>
-    <link rel="stylesheet" href="../css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/style.css" type="text/css" />
     <script type="text/javascript" src="../lib/jquery.js"></script>
     <script type="text/javascript" src="../src/start.js"></script>
 </head>
+
 <body>
-<div id="app">
-    <div id="header">
-        <div id="toolbar">
-            <div id="left-toolbar" class="left-column">
-                <div class="toolbar-button">
-                    <img class="button-bg" src="../Resources/Images/Cloud.svg" alt="云课件">
+    <div id="app">
+        <div id="header">
+            <div id="toolbar">
+                <div id="left-toolbar" class="left-column">
+                    <div class="toolbar-button" id="file-list-button">
+                        <img class="button-bg" src="../Resources/Images/Cloud.svg" alt="云课件">
+                    </div>
+                    <div class="toolbar-button">
+                        <img class="button-bg" src="../Resources/Images/Sync.svg" alt="同步">
+                    </div>
                 </div>
-                <div class="toolbar-button">
-                    <img class="button-bg" src="../Resources/Images/Sync.svg" alt="同步">
+                <div id="center-toolbar" class="center-column">
+                    <div class="toolbar-button">
+                        <img class="button-bg" src="../Resources/Images/Text.svg" alt="文本">
+                    </div>
+                    <div class="toolbar-button">
+                        <img class="button-bg" src="../Resources/Images/Picture.svg" alt="图片">
+                    </div>
+                    <div class="toolbar-button">
+                        <img class="button-bg" src="../Resources/Images/Shape.svg" alt="形状">
+                    </div>
+                    <div class="toolbar-button">
+                        <img class="button-bg" src="../Resources/Images/Multimedia.svg" alt="多媒体">
+                    </div>
                 </div>
-            </div>
-            <div id="center-toolbar" class="center-column">
-                <div class="toolbar-button">
-                    <img class="button-bg" src="../Resources/Images/Text.svg" alt="文本">
+                <div id="right-toolbar" class="right-column">
                 </div>
-                <div class="toolbar-button">
-                    <img class="button-bg" src="../Resources/Images/Picture.svg" alt="图片">
-                </div>
-                <div class="toolbar-button">
-                    <img class="button-bg" src="../Resources/Images/Shape.svg" alt="形状">
-                </div>
-                <div class="toolbar-button">
-                    <img class="button-bg" src="../Resources/Images/Multimedia.svg" alt="多媒体">
-                </div>
-            </div>
-            <div id="right-toolbar" class="right-column">
             </div>
         </div>
-    </div>
-    <div id="content">
-        <div id="slide-panel" class="left-column">
-            <ul id="thumbnails"><ul>
-        </div>
-        <div id="workspace" class="center-column">
-            <div id="board-container">
-                <svg id="board" viewBox="0 0 1280 720">
-                    <use xlink:href="#slide"/>
+        <div id="content">
+            <div id="slide-panel" class="left-column">
+                <ul id="thumbnails">
+                    <ul>
+            </div>
+            <div id="workspace" class="center-column">
+                <div id="board-container">
+                    <svg id="board" viewBox="0 0 1280 720">
+                        <use xlink:href="#slide" />
+                    </svg>
+                </div>
+                <svg class="hide">
+                    <symbol id="slide">
+                        <g fill="white">
+                            <rect width="1280" height="720" />
+                        </g>
+                    </symbol>
                 </svg>
             </div>
-            <svg class="hide">
-                <symbol id="slide">
-                    <g fill="white">
-                        <rect width="1280" height="720"/>
-                    </g>
-                </symbol>
-            </svg>
+            <div id="property-panel" class="right-column"></div>
         </div>
-        <div id="property-panel" class="right-column"></div>
+        <div id="footer">
+        </div>
     </div>
-    <div id="footer">
+    <div id="file-list-panel">
+        <ul>
+
+        </ul>
     </div>
-</div>
 </body>
+
 </html>
