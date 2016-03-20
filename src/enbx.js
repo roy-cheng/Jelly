@@ -24,31 +24,6 @@ function open(file) {
     });
 }
 
-function parseReference(func) {
-    fs.readFile('.test/test.enbx.unzip/Reference.xml', function(err, data) {
-        xml2js.parseString(data, function(err, result) {
-            var reference = result.Reference;
-            if (typeof reference.Relationships != "undefined") {
-                var relationships = reference.Relationships[0].Relationship;
-                var refs = [];
-                for (var i = 0; i < relationships.length; i++) {
-                    var r = relationships[i];
-                    refs[r.Id[0]] = r.Target[0];
-                }
-            }
-            if (typeof func != "undefined") {
-                var resolver = {
-                    resolve: s => {
-                        return rel(refs[s.substr(5)])
-                    }
-                }
-                func(resolver);
-            }
-        });
-    });
-
-}
-
 function EnbxDocument() {
 }
 EnbxDocument.fromFile = function(enbxFile, func) {
@@ -64,6 +39,11 @@ EnbxDocument.fromFile = function(enbxFile, func) {
 
             slideFiles = slideFiles.map(f => path.join(slideDir, f))
                 .filter(f => fs.statSync(f).isFile());
+            slideFiles.sort((s1, s2)=>{
+                s1 = s1.replace(/^.*[\\\/]/, '').replace(/^Slide_([\d]+).xml$/i, '$1');
+                s2 = s2.replace(/^.*[\\\/]/, '').replace(/^Slide_([\d]+).xml$/i, '$1');
+                return parseInt(s1) - parseInt(s2);
+            });
             var boardFile = rel('board.xml');
             var refFile = rel('reference.xml');
             // console.log(slideFiles);
@@ -71,13 +51,22 @@ EnbxDocument.fromFile = function(enbxFile, func) {
             var checkRenturn = () => {
                 if (doc.board && doc.refs && doc.slides.length == slideFiles.length
                     && doc.slides.every(x => x)) {
+                    console.log(doc);
                     func(doc);
                 }
             };
             readXmlFile(refFile, model => {
                 doc.refs = model;
+                var dict = [];
+                for (var r of model.relationships) {
+                    dict[r.id] = r.target;
+                }
+                console.log(dict)
                 doc.refs.resolve = s => {
-                    return rel(model[s.substr(5)]);
+                    if (typeof s === 'defined') {
+                        console.log('error')
+                    }
+                    return rel(dict[s.substr(5)]);
                 }
                 checkRenturn();
             });
@@ -85,10 +74,10 @@ EnbxDocument.fromFile = function(enbxFile, func) {
                 doc.board = model;
                 checkRenturn();
             });
-            for (var i = 0; i < slideFiles.length; i++) {
-                let n = i;
+            for (let i = 0; i < slideFiles.length; i++) {
                 readXmlFile(slideFiles[i], model => {
-                    doc.slides[n] = model;
+                    doc.slides[i] = model;
+                    model._f = slideFiles[i];
                     checkRenturn();
                 });
             }

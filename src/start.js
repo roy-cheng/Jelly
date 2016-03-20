@@ -25,11 +25,9 @@ $(document).ready(function() {
     updateLayout();
 
     $('#file-list-button').click(() => {
-        console.log('down');
         $('#file-list-panel').show();
     });
     $('#content').click(() => {
-        console.log('~down');
         $('#file-list-panel').hide();
     });
 
