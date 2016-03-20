@@ -8,6 +8,7 @@ var model = require('../src/model'),
     view = require('../src/view');
 
 var unzipDir = '.test/test.enbx.unzip/';
+fs.del
 function rel(p) {
     return path.resolve(unzipDir + p);
 }
@@ -47,45 +48,48 @@ function parseReference(func) {
 function EnbxDocument() {
 }
 EnbxDocument.fromFile = function(enbxFile, func) {
-    fs.createReadStream(enbxFile).pipe(unzip.Extract({ path: unzipDir }).on('close', function() {
-        var slideDir = rel('slides');
-        fs.readdir(slideDir, function(err, slideFiles) {
-            if (err) {
-                throw err;
-            }
-
-            var doc = new EnbxDocument();
-            doc.slides = [];
-
-            slideFiles = slideFiles.map(f => path.join(slideDir, f))
-                .filter(f => fs.statSync(f).isFile());
-            var boardFile = rel('board.xml');
-            var refFile = rel('reference.xml');
-
-            var checkRenturn = () => {
-                if (doc.board && doc.refs && doc.slides.length == slideFiles.length
-                    && doc.slides.every(x => x)) {
-                    func(doc);
+    fs.rmdir(unzipDir, () => {
+        fs.createReadStream(enbxFile).pipe(unzip.Extract({ path: unzipDir }).on('close', function() {
+            var slideDir = rel('slides');
+            fs.readdir(slideDir, function(err, slideFiles) {
+                if (err) {
+                    throw err;
                 }
-            };
-            readXmlFile(refFile, model => {
-                doc.refs = model;
-                checkRenturn();
-            });
-            readXmlFile(boardFile, model => {
-                doc.board = model;
-                checkRenturn();
-            });
-            for (var i = 0; i < slideFiles.length; i++) {
-                let n = i;
-                readXmlFile(slideFiles[i], model => {
-                    doc.slides[n] = model;
+
+                var doc = new EnbxDocument();
+                doc.slides = [];
+
+                slideFiles = slideFiles.map(f => path.join(slideDir, f))
+                    .filter(f => fs.statSync(f).isFile());
+                var boardFile = rel('board.xml');
+                var refFile = rel('reference.xml');
+                console.log(slideFiles);
+                console.log(slideFiles.length);
+                var checkRenturn = () => {
+                    if (doc.board && doc.refs && doc.slides.length == slideFiles.length
+                        && doc.slides.every(x => x)) {
+                        func(doc);
+                    }
+                };
+                readXmlFile(refFile, model => {
+                    doc.refs = model;
                     checkRenturn();
                 });
-            }
-        });
-    }));
-    var doc = new EnbxDocument();
+                readXmlFile(boardFile, model => {
+                    doc.board = model;
+                    checkRenturn();
+                });
+                for (var i = 0; i < slideFiles.length; i++) {
+                    let n = i;
+                    readXmlFile(slideFiles[i], model => {
+                        doc.slides[n] = model;
+                        checkRenturn();
+                    });
+                }
+            });
+        }));
+    });
+
 
 }
 function readXmlFile(file, func) {

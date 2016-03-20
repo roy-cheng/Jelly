@@ -82,7 +82,7 @@ ul {
 
 #slide-panel {
   background-color: #dfe1e6;
-    padding: 7px 0;
+  padding: 7px 0;
 }
 #workspace {
   margin:25px;
@@ -105,9 +105,23 @@ ul {
 #thumbnails{
     margin:0;
     overflow: auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    -webkit-box-flex: 1;
 }
 .slide-thumbnail{
-    margin:3px 8px;
+    margin:0px 3px;
+}
+.slide-thumbnail svg{
+  border: 4px solid transparent;
+  border-radius: 3px;
+}
+.slide-thumbnail:hover svg{
+  border: 4px solid dodgerblue;
+}
+.slide-thumbnail.active svg{
+  border: 4px solid dodgerblue;
 }
 .fullscreen{
     margin:0;

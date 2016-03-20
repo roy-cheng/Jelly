@@ -33,11 +33,7 @@ function render(slideModel, refs) {
     for (var element of slideModel.elements) {
         drawElement(s, element, refs);
     }
-    // var svg = drawS(slideModel, refs);
-    // var $container = $('board-container');
-    // $container.remove($('board-container svg'));
-    // var con = document.getElementById('board-container');
-    // con.appendChild(svg);
+    $('#thumbnails li:first').addClass('active');
 }
 
 function drawElement(s, element, refs) {
@@ -106,7 +102,7 @@ function renderThumbnails(models, refs) {
     
     for (let m of models) {
         var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
-        var $li = $('<li class="slide-thumbnail"></li>');
+        let $li = $('<li class="slide-thumbnail"></li>');
         $panel.append($li);
         $li.append($svg);
         var s = new Snap($svg[0]);
@@ -118,9 +114,9 @@ function renderThumbnails(models, refs) {
         }
 
         $li.click(() => {
-            console.log(1);
             render(m, refs);
-            console.log(2);
+            $('#thumbnails li').removeClass('active');
+            $li.addClass('active');
         });
     }
 }

@@ -34,7 +34,7 @@ $('html').keydown(function(event) {
         $('#board').addClass('fullscreen');
         updateLayout();
     }
-    //   Esc
+    // Esc
     if (event.keyCode === 27) {
         $('#board').removeClass('fullscreen');
         updateLayout();
