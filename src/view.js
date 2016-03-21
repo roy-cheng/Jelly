@@ -1,28 +1,42 @@
+'use strict';
+
 var Snap = require('snapsvg');
 
 function drawGrid() {
     var s = Snap('#board');
-    for (var x = 100; x < 1280; x += 100) {
+    for (var x = 20; x < 1280; x += 20) {
         var line = s.line(x, 0, x, 720);
         line.attr({
             stroke: "888",
             strokeWidth: 1
         });
-        if (x % 250 == 0) {
+        if (x % 100 == 0) {
             line.attr({
-                stroke: "000"
+                stroke: "000",
+                strokeWidth: 2
+            });
+        }
+        if (x % 500 == 0) {
+            line.attr({
+                strokeWidth: 6
             });
         }
     }
-    for (var y = 100; y < 720; y += 100) {
+    for (var y = 20; y < 720; y += 20) {
         var line = s.line(0, y, 1280, y);
         line.attr({
             stroke: "888",
             strokeWidth: 1
         });
-        if (y % 250 == 0) {
+        if (y % 100 == 0) {
             line.attr({
-                stroke: "000"
+                stroke: "000",
+                strokeWidth: 2
+            });
+        }
+        if (y % 500 == 0) {
+            line.attr({
+                strokeWidth: 6
             });
         }
     }
@@ -30,12 +44,13 @@ function drawGrid() {
 
 function render(slideModel, refs) {
     var s = new Snap('#board');
+    s.clear();
     var background = s.rect(0, 0, 1280, 720);
     background.attr({ fill: slideModel.background });
     for (var element of slideModel.elements) {
         drawElement(s, element, refs);
     }
-    $('#thumbnails li:first').addClass('active');
+    //drawGrid();
 }
 
 function drawElement(s, element, refs) {
@@ -73,6 +88,9 @@ function drawPicture(s, m, refs) {
 }
 
 function drawText(s, m) {
+    console.log(m);
+    var left = m.x + 10;
+    var top = 10 + m.y;
     for (var i = 0; i < m.richText.textLines.length; i++) {
         var line = m.richText.textLines[i];
         if (typeof line.textRuns === 'undefined') {
@@ -81,7 +99,7 @@ function drawText(s, m) {
         var textRunInnerStrings = line.textRuns.map(function(x) {
             return x.text
         });
-        var text = s.text(m.x, m.y, textRunInnerStrings);
+        var text = s.text(left, 0, textRunInnerStrings);
         for (var j = 0; j < line.textRuns.length; j++) {
             var runModel = line.textRuns[j];
             var run = text.selectAll('tspan:nth-child(' + (j + 1) + ')');
@@ -91,11 +109,14 @@ function drawText(s, m) {
                 'font-family': runModel.fontFamily
             });
         }
+        console.log('line'+i)
+        console.log(top);
         var box = text.getBBox();
         text.attr({
-            x: m.x + (m.x - box.x),
-            y: m.y + (m.y - box.y)
+            y: top - box.y
         });
+        top = top+box.height*1.1;
+        console.log(top);
     }
 }
 
@@ -121,6 +142,7 @@ function renderThumbnails(models, refs) {
             $li.addClass('active');
         });
     }
+    $('#thumbnails li:first').addClass('active');
 }
 
 exports.render = render;

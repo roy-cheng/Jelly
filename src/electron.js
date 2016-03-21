@@ -12,7 +12,7 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1800, height: 1200});
+  mainWindow = new BrowserWindow({width: 1600, height: 900, title: 'EasiNote'});
 
   mainWindow.setMenu(null);
 

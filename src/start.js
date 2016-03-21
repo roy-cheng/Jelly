@@ -32,7 +32,7 @@ $(document).ready(function() {
     });
 
     var enbx = require('../src/enbx.js');
-    enbx.open('.test/test.enbx')
+    enbx.open('.test/x.enbx')
     enbx.listEnbxFiles();
 });
 
@@ -44,6 +44,7 @@ $('html').keydown(function(event) {
         var win = remote.getCurrentWindow();
         if (!win.isMaximized()) {
             win.maximize();
+            win.setFullScreen(true);
         }
         updateLayout();
     }
@@ -52,8 +53,10 @@ $('html').keydown(function(event) {
         $('#board').removeClass('fullscreen');
         var remote = require('remote');
         var win = remote.getCurrentWindow();
-        if (win.isMaximized()) {
-            win.maximize();
+        if (win.isMaximized() || win.isFullScreen()) {
+            win.setFullScreen(false);
+            win.restore();
+            console.log()
         }
         updateLayout();
     }

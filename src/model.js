@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var fs = require('fs'),
     unzip = require('unzip'),
@@ -6,17 +6,17 @@ var fs = require('fs'),
 
 function EnbxDocument(repo) {
 }
-EnbxDocument.fromFile = function(enbxFile, func) {
+EnbxDocument.fromFile = function (enbxFile, func) {
     var unzipDir = '.test/' + Date.now().toString() + '/';
     fs.mkdirSync(unzipDir);
-    
+
     function rel(p) {
         return path.resolve(unzipDir + p);
     }
-    
-    fs.createReadStream(enbxFile).pipe(unzip.Extract({ path: unzipDir }).on('close', function() {
+
+    fs.createReadStream(enbxFile).pipe(unzip.Extract({path: unzipDir}).on('close', function () {
         var slideDir = rel('slides');
-        fs.readdir(slideDir, function(err, slideFiles) {
+        fs.readdir(slideDir, function (err, slideFiles) {
             if (err) {
                 throw err;
             }
@@ -43,8 +43,10 @@ EnbxDocument.fromFile = function(enbxFile, func) {
             readXmlFile(refFile, model => {
                 doc.refs = model;
                 var dict = [];
-                for (var r of model.relationships) {
-                    dict[r.id] = r.target;
+                if (typeof model.relationships !== 'undefined') {
+                    for (var r of model.relationships) {
+                        dict[r.id] = r.target;
+                    }
                 }
                 console.log(dict)
                 doc.refs.resolve = s => {
@@ -59,7 +61,7 @@ EnbxDocument.fromFile = function(enbxFile, func) {
                 doc.board = model;
                 checkRenturn();
             });
-            for (var i = 0; i < slideFiles.length; i++) {
+            for (let i = 0; i < slideFiles.length; i++) {
                 readXmlFile(slideFiles[i], model => {
                     doc.slides[i] = model;
                     model._f = slideFiles[i];
@@ -71,7 +73,7 @@ EnbxDocument.fromFile = function(enbxFile, func) {
 }
 
 function readXmlFile(file, func) {
-    fs.readFile(file, function(err, data) {
+    fs.readFile(file, 'utf8', function (err, data) {
         var parser = new DOMParser();
         var xmlDom = parser.parseFromString(data, 'text/xml');
         var m = createModel(xmlDom.documentElement);
@@ -95,14 +97,14 @@ function modelOf(type, definition) {
         return createModel(type);
     }
     else {
-        return function(element) {
+        return function (element) {
             return new Model(type, element, definition);
         }
     }
 }
 
 function arrayOf(type) {
-    return function(element) {
+    return function (element) {
         return Array.prototype.slice.call(element.children).map(x => type(x));
     }
 }
@@ -134,9 +136,6 @@ function Model(type, xmlElement, definition) {
 
         if (typeof converter !== 'undefined') {
             this[fieldName] = converter(childElement);
-            // if(converter.name === 'test'){
-            //     console.log('this[fieldName]='+this[fieldName]+', '+fieldName);
-            // }
         }
     }
 }
