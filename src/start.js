@@ -1,12 +1,28 @@
 'use strict';
 
-var app = {
-    runningInNode: typeof require === 'function'
-}
+var app = null;
+(function(){
+    let createStore = require('redux').createStore;
+    let handlers = [];
 
-if (app.runningInNode) {
-    var $ = require('../lib/jquery.js');
-}
+    function disptach(state, action) {
+        if(typeof state === 'undefined'){
+            state = {};
+        }
+        var handler = handlers[action.type];
+        if(typeof handler === 'undefined'){
+            console.error('no handler for such action: '+ action.type);
+        }
+    }
+    let store = createStore(disptach);
+
+    app = {
+        runningInNode: typeof require === 'function',
+        action: actionType => { store.dispatch({ type: actionType }); },
+        state: () => store.getState(),
+        subscribe: func => store.subscribe(func)
+    }
+})();
 
 function updateLayout() {
     var workspace = $('#workspace');
