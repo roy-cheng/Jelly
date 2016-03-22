@@ -4,6 +4,8 @@
   "description": "A Roy Cheng's application",
   "main": "./src/electron.js",
   "dependencies": {
+    "jquery": "^2.2.2",
+    "redux": "^3.3.1",
     "snapsvg": "sethvincent/Snap.svg#a34b8af69b"
   }
 }

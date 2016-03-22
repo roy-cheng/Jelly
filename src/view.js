@@ -1,5 +1,95 @@
 'use strict';
 
+(function() {
+    $(document).ready(function() {
+        updateLayout();
+
+        $('#file-list-button').click(() => {
+            $('#file-list-panel').show();
+        });
+        $('#content').click(() => {
+            $('#file-list-panel').hide();
+        });
+        app.dispatch({ type: '~ready' });
+
+
+        $('html').keydown(function(event) {
+            // F5
+            if (event.keyCode === 116) {
+                app.dispatch({ type: '~view/display' });
+                maximize(true);
+            }
+            // Esc
+            if (event.keyCode === 27) {
+                app.dispatch({ type: '~view/edit' });
+                maximize(false);
+            }
+        });
+
+        window.onresize = function() {
+            updateLayout();
+        };
+    });
+
+    function maximize(max) {
+        var remote = require('remote');
+        var win = remote.getCurrentWindow();
+        if (max) {
+            $('#board').addClass('fullscreen');
+            if (!win.isMaximized()) {
+                win.maximize();
+                win.setFullScreen(true);
+            }
+        }
+        else {
+            $('#board').removeClass('fullscreen');
+            if (win.isMaximized() || win.isFullScreen()) {
+                win.setFullScreen(false);
+                win.restore();
+            }
+        }
+        updateLayout();
+    }
+
+
+    function updateLayout() {
+        var workspace = $('#workspace');
+        $('#board-container').stop().animate({
+            width: workspace.width(),
+            height: workspace.height()
+        }, 120);
+
+        var $thumbnails = $('#thumbnails');
+        $thumbnails.height($thumbnails.parent().height());
+    }
+
+    app.subscribe(() => {
+        var state = app.getState();
+        console.log(state)
+        if (state.file.justOpened) {
+            $('li.slide-thumbnail').remove();
+            var doc = state.file.document;
+            render(doc.slides[0], doc.refs);
+            renderThumbnails(doc.slides, doc.refs);    
+    }
+        if (state.file.justListLocal) {
+            renderFileList(state.file.localFiles);
+        }
+    });
+})()
+
+function renderFileList(files){        
+    for (let file of files) {
+        let $li = $('<li></li>').text(file.name);
+        $('#file-list-panel ul').append($li);
+        $li.click(() => {
+            app.thenDispatch({ type: '~file/open', url: file.path });
+            $('#file-list-panel').hide();
+        });
+    }
+}
+
+
 var Snap = require('snapsvg');
 
 function drawGrid() {
@@ -112,13 +202,13 @@ function drawText(s, m) {
         text.attr({
             y: top - box.y
         });
-        top = top+box.height*1.1;
+        top = top + box.height * 1.1;
     }
 }
 
 function renderThumbnails(models, refs) {
     var $panel = $('#thumbnails ul');
-    
+
     for (let m of models) {
         var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
         let $li = $('<li class="slide-thumbnail"></li>');

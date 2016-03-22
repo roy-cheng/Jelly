@@ -1,81 +1,119 @@
 'use strict';
 
-var app = null;
-(function(){
-    let createStore = require('redux').createStore;
-    let handlers = [];
-
-    function disptach(state, action) {
-        if(typeof state === 'undefined'){
-            state = {};
-        }
-        var handler = handlers[action.type];
-        if(typeof handler === 'undefined'){
-            console.error('no handler for such action: '+ action.type);
-        }
-    }
-    let store = createStore(disptach);
-
-    app = {
-        runningInNode: typeof require === 'function',
-        action: actionType => { store.dispatch({ type: actionType }); },
-        state: () => store.getState(),
-        subscribe: func => store.subscribe(func)
-    }
-})();
-
-function updateLayout() {
-    var workspace = $('#workspace');
-    $('#board-container').stop().animate({
-        width: workspace.width(),
-        height: workspace.height()
-    }, 120);
-
-    var $thumbnails = $('#thumbnails');
-    $thumbnails.height($thumbnails.parent().height());
+if (!$) {
+    var $ = require('jquery');
 }
 
-window.onresize = function() {
-    updateLayout();
-};
+var app = null;
+(function() {
+    let redux = require('redux');
+    let createStore = redux.createStore;
+    let combineReducers = redux.combineReducers;
 
-$(document).ready(function() {
-    updateLayout();
+    function change(state, obj) {
+        return Object.assign({}, state, obj);
+    }
 
-    $('#file-list-button').click(() => {
-        $('#file-list-panel').show();
-    });
-    $('#content').click(() => {
-        $('#file-list-panel').hide();
-    });
+    function application(state, action) {
+        if (typeof state === 'undefined') {
+            state = {
+                ready: false,
+                view: 'edit'
+            };
+        }
 
-    var enbx = require('../src/enbx.js');
-    enbx.open('.test/x.enbx')
-    enbx.listEnbxFiles();
+        for (var field in state) {
+            if (field.match(/^going/) || field.match(/^just/)) {
+                delete state[field];
+            }
+        }
+
+        switch (action.type) {
+            case '~ready':
+                return change(state, { ready: true, justReady: true });
+            case '~view/edit':
+                return change(state, {
+                    view: 'edit',
+                    goingToEditView: state.view !== 'edit',
+                });
+            case '~view/display':
+                return change(state, {
+                    view: 'display',
+                    goingToDisplayView: state.view !== 'display'
+                });
+        }
+        return state;
+    }
+
+    function file(state, action) {
+        if (typeof state === 'undefined') {
+            state = {
+                localRepository: '../src/document',
+                document: null,
+                isLoading: false
+            };
+        }
+
+        for (var field in state) {
+            if (field.match(/^going/) || field.match(/^just/)) {
+                delete state[field];
+            }
+        }
+
+        switch (action.type) {
+            case '~file/open':
+                if (state.url !== action.url) {
+                    return change(state, {
+                        goingOpen: true,
+                        isLoading: true,
+                        url: action.url
+                    });
+                }
+                break;
+            case '~file/didOpen':
+                if (state.url === action.url) {
+                    return change(state, {
+                        justOpened: true,
+                        isLoading: false,
+                        document: action.document
+                    });
+                }
+                break;
+            case '~file/listLocal':
+                return change(state, {
+                    isLoadingLocalList: true,
+                    goingListLocal: true,
+                });
+            case '~file/didListLocal':
+                return change(state, {
+                    isLoadingLocalList: false,
+                    justListLocal: true,
+                    localFiles: action.localFiles
+                });
+        }
+        return state;
+    }
+
+    const reducers = combineReducers({ application, file });
+    const router = (state, action) => {
+        console.log(action.type)
+        return reducers(state, action);
+    };
+
+    app = createStore(router);
+    app.thenDispatch = action => {
+        setTimeout(() => { app.dispatch(action) }, 0);
+    }
+
+})();
+
+app.subscribe(() => {
+    var state = app.getState();
+    if (state.application.justReady) {
+        app.thenDispatch({ type: '~file/open', url: '.test/test.enbx' });
+        app.thenDispatch({ type: '~file/listLocal' });
+    }
 });
 
-$('html').keydown(function(event) {
-    // F5
-    if (event.keyCode === 116) {
-        $('#board').addClass('fullscreen');
-        var remote = require('remote');
-        var win = remote.getCurrentWindow();
-        if (!win.isMaximized()) {
-            win.maximize();
-            win.setFullScreen(true);
-        }
-        updateLayout();
-    }
-    // Esc
-    if (event.keyCode === 27) {
-        $('#board').removeClass('fullscreen');
-        var remote = require('remote');
-        var win = remote.getCurrentWindow();
-        if (win.isMaximized() || win.isFullScreen()) {
-            win.setFullScreen(false);
-            win.restore();
-            console.log()
-        }
-        updateLayout();
-    }
-});
+require('../src/view');
+require('../src/document');
