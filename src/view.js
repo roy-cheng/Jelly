@@ -88,7 +88,6 @@ function drawPicture(s, m, refs) {
 }
 
 function drawText(s, m) {
-    console.log(m);
     var left = m.x + 10;
     var top = 10 + m.y;
     for (var i = 0; i < m.richText.textLines.length; i++) {
@@ -109,14 +108,11 @@ function drawText(s, m) {
                 'font-family': runModel.fontFamily
             });
         }
-        console.log('line'+i)
-        console.log(top);
         var box = text.getBBox();
         text.attr({
             y: top - box.y
         });
         top = top+box.height*1.1;
-        console.log(top);
     }
 }
 

@@ -40,15 +40,23 @@ EnbxDocument.fromFile = function (enbxFile, func) {
                     func(doc);
                 }
             };
-            readXmlFile(refFile, model => {
+            readXmlFile(refFile, (err, model) => {
+                if(err){
+                    console.log(err);
+                    var relationships = []
+                    model = {}
+                }
+                else if(typeof model.relationships === 'undefined'){
+                    var relationships = []
+                }
+                else{
+                    var relationships = model.relationships
+                }
                 doc.refs = model;
                 var dict = [];
-                if (typeof model.relationships !== 'undefined') {
-                    for (var r of model.relationships) {
-                        dict[r.id] = r.target;
-                    }
+                for (var r of relationships) {
+                    dict[r.id] = r.target;
                 }
-                console.log(dict)
                 doc.refs.resolve = s => {
                     if (typeof s === 'defined') {
                         console.log('error')
@@ -57,12 +65,12 @@ EnbxDocument.fromFile = function (enbxFile, func) {
                 }
                 checkRenturn();
             });
-            readXmlFile(boardFile, model => {
+            readXmlFile(boardFile, (err, model) => {
                 doc.board = model;
                 checkRenturn();
             });
             for (let i = 0; i < slideFiles.length; i++) {
-                readXmlFile(slideFiles[i], model => {
+                readXmlFile(slideFiles[i], (err, model) => {
                     doc.slides[i] = model;
                     model._f = slideFiles[i];
                     checkRenturn();
@@ -74,10 +82,15 @@ EnbxDocument.fromFile = function (enbxFile, func) {
 
 function readXmlFile(file, func) {
     fs.readFile(file, 'utf8', function (err, data) {
-        var parser = new DOMParser();
-        var xmlDom = parser.parseFromString(data, 'text/xml');
-        var m = createModel(xmlDom.documentElement);
-        func(m);
+        if(err){
+            func(err, {});
+        }
+        else{
+            var parser = new DOMParser();
+            var xmlDom = parser.parseFromString(data, 'text/xml');
+            var m = createModel(xmlDom.documentElement);
+            func(err, m);
+        }
     });
 }
 
@@ -114,6 +127,7 @@ function createModel(xmlElement, type) {
     var def = definitions[type];
     if (typeof def === 'undefined') {
         console.log('undefined type: ' + type);
+        console.log(xmlElement);
         return new Model(type);
     }
     else {

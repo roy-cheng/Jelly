@@ -1,16 +1,18 @@
 'use strict';
 
-if (!$) {
+var app = {
+    runningInNode: typeof require === 'function'
+}
+
+if (app.runningInNode) {
     var $ = require('../lib/jquery.js');
 }
 
 function updateLayout() {
-    var $outterElement = $('#workspace');
-    var $container = $('#board-container');
-    $container.stop();
-    $container.animate({
-        width: $outterElement.width(),
-        height: $outterElement.height()
+    var workspace = $('#workspace');
+    $('#board-container').stop().animate({
+        width: workspace.width(),
+        height: workspace.height()
     }, 120);
 
     var $thumbnails = $('#thumbnails');
