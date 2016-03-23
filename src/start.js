@@ -79,6 +79,34 @@ var app = null;
                     });
                 }
                 break;
+            case '~file/open/board':
+                if (state.url === action.url) {
+                    let slides = new Array(action.board.slides.length);
+                    return change(state, {
+                        slides: slides,
+                        justUpdatedSlideCount: true,
+                        activeSlideIndex: 0
+                    });
+                }
+                break;
+            case '~file/open/slide':
+                if (state.url === action.url) {
+                    state.slides[action.index] = action.slide;
+                    return change(state, {
+                        justUpdatedSlideIndex: action.index,
+                        justLoadedSlide: true
+                    });
+                }
+                break;
+            case '~file/didOpen':
+                if (state.url === action.url) {
+                    return change(state, {
+                        justOpened: true,
+                        isLoading: false,
+                        document: action.document
+                    });
+                }
+                break;
             case '~file/listLocal':
                 return change(state, {
                     isLoadingLocalList: true,
@@ -110,7 +138,7 @@ var app = null;
 app.subscribe(() => {
     var state = app.getState();
     if (state.application.justReady) {
-        app.thenDispatch({ type: '~file/open', url: '.test/test.enbx' });
+        app.thenDispatch({ type: '~file/open', url: 'local/a.enbx' });
         app.thenDispatch({ type: '~file/listLocal' });
     }
 });

@@ -1,3 +1,5 @@
+'use strict';
+
 var fs = require('fs'),
     unzip = require('unzip'),
     path = require('path');
@@ -6,7 +8,7 @@ var createModel = require('../src/model').createModel;
 function EnbxDocument(repo) {
 }
 EnbxDocument.fromFile = function (enbxFile, func) {
-    var unzipDir = '.test/' + Date.now().toString() + '/';
+    var unzipDir = '.temp/' + Date.now().toString() + '/';
     fs.mkdirSync(unzipDir);
 
     function rel(p) {

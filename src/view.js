@@ -65,20 +65,37 @@
 
     app.subscribe(() => {
         var state = app.getState();
-        console.log(state)
-        if (state.file.justOpened) {
-            $('li.slide-thumbnail').remove();
-            var doc = state.file.document;
-            render(doc.slides[0], doc.refs);
-            renderThumbnails(doc.slides, doc.refs);    
-    }
-        if (state.file.justListLocal) {
-            renderFileList(state.file.localFiles);
+        if (state.file.justUpdatedSlideCount) {
+            createEmptyThumbnails(state.file.slides.length);
+            $('#thumbnails li:' + nthChild(state.file.activeSlideIndex)).addClass('active');
+        }
+        if (state.file.justLoadedSlide) {
+            let index = state.file.justUpdatedSlideIndex;
+            let svg = $('#thumbnails li:' + nthChild(index) + ' svg')[0];
+            drawSlide(state.file.slides[index], new Snap(svg));
+            
+            if(index === state.file.activeSlideIndex){
+                let paper = new Snap('#board');
+                drawSlide(state.file.slides[activeSlideIndex], paper);
+            }
         }
     });
-})()
+    //     app.subscribe(() => {
+    //     var state = app.getState();
+    //     console.log(state)
+    //     if (state.file.justOpened) {
+    //         $('li.slide-thumbnail').remove();
+    //         var doc = state.file.document;
+    //         render(doc.slides[0], doc.refs);
+    //         renderThumbnails(doc.slides, doc.refs);    
+    // }
+    //     if (state.file.justListLocal) {
+    //         renderFileList(state.file.localFiles);
+    //     }
+    // });
+})();
 
-function renderFileList(files){        
+function renderFileList(files) {
     for (let file of files) {
         let $li = $('<li></li>').text(file.name);
         $('#file-list-panel ul').append($li);
@@ -229,6 +246,40 @@ function renderThumbnails(models, refs) {
         });
     }
     $('#thumbnails li:first').addClass('active');
+}
+
+function createEmptyThumbnails(count) {
+    var $panel = $('#thumbnails ul');
+    $panel.remove('li');
+    for (let i = 0; i < count; i++) {
+        var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
+        let $li = $('<li class="slide-thumbnail"></li>');
+        $panel.append($li);
+        $li.append($svg);
+        var s = new Snap($svg[0]);
+        var background = s.rect(0, 0, 1280, 720);
+        background.attr({ fill: 'white' });
+
+        $li.click(() => {
+            app.dispatch({ type: '~navigation/slide', index: i })
+            $('#thumbnails li').removeClass('active');
+            $li.addClass('active');
+        });
+    }
+}
+
+function drawSlide(slide, paper) {
+    paper.clear();
+    var background = paper.rect(0, 0, 1280, 720);
+    background.attr({ fill: slide.background });
+
+    for (var element of slide.elements) {
+        drawElement(paper, element);
+    }
+}
+
+function nthChild(i) {
+    return 'nth-child(' + i + ')';
 }
 
 exports.render = render;
