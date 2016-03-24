@@ -3,11 +3,11 @@
 (function() {
     var fs = require('fs'),
         path = require('path'),
-        unzip = require('unzip'),
-        model = require('../src/model');
+        unzip = require('unzip');
 
     var EnbxDocument = require('../src/repo').EnbxDocument,
-        view = require('../src/view');
+        view = require('../src/view'),
+        model = require('../src/xmlParser');
 
     function open(file, func) {
         EnbxDocument.fromFile(file, func);
@@ -41,7 +41,7 @@
         return promise;
     }
 
-    function readXmlFile(file) {
+    function readXmlFile(file, res) {
         var promise = new Promise((resolve, reject) => {
             fs.readFile(file, 'utf8', function(err, data) {
                 if (err) {
@@ -50,7 +50,7 @@
                 else {
                     var parser = new DOMParser();
                     var xmlDom = parser.parseFromString(data, 'text/xml');
-                    var m = model.createModel(xmlDom.documentElement);
+                    var m = model.createEnbxModel(xmlDom.documentElement, res);
                     resolve(m);
                 }
             });
@@ -87,9 +87,9 @@
 
     function getRefs(uncompressedDir) {
         var promise = new Promise((resolve, reject) => {
-            readXmlFile(path.join(uncompressedDir, 'board.xml')).then(relationships => {
-                var dict = [];
-                for (var r of relationships) {
+            readXmlFile(path.join(uncompressedDir, 'reference.xml')).then(res => {
+                var dict = {};
+                for (var r of res.relationships) {
                     dict[r.id] = r.target;
                 }
                 var refs = {
@@ -97,11 +97,12 @@
                         if (typeof s === 'undefined') {
                             console.error('error')
                         }
-                        return relativePath(dict[s.substr(5)]);
+                        return path.join('..', uncompressedDir, dict[s.substr(5)]);
                     }
                 };
                 resolve(refs);
-            }).catch(relationships => {
+            }).catch(err => {
+                console.error(err);
                 var refs = {
                     get: s => {
                         return undefined;
@@ -115,7 +116,8 @@
 
     function getSlide(slideFile, getRef) {
         var promise = new Promise((resolve, reject) => {
-            readXmlFile(slideFile).then(slide => {
+            readXmlFile(slideFile, getRef).then(slide => {
+                console.log(slide);
                 resolve(slide);
             });
         });
@@ -127,22 +129,24 @@
 
     class LocalRepository {
         static loadDocument(builder) {
-            let tempDir = '.temp/' + Date.now().toString() + '/';
-            fs.mkdirSync(tempDir);
+            // let tempDir = '.temp/' + Date.now().toString() + '/';
+            let tempDir = '.temp/' + 'fix' + '/';
+            // fs.mkdirSync(tempDir);
 
             let uncompressing = uncompress(builder.url, tempDir);
             let loadingBoard = uncompressing.then(getBoard);
-            let loadingRefs = uncompressing.then(getBoard);
+            let loadingRefs = uncompressing.then(getRefs);
             let loadingSlides = uncompressing.then(getSlideFiles);
 
             Promise.all([loadingBoard, loadingRefs, loadingSlides]).then(results => {
                 let board = results[0];
                 let refs = results[1];
                 let slideFiles = results[2];
+                    console.log(results);
 
                 builder.onBoardReady(board);
 
-                let slidePromises = slideFiles.map(f => getSlide(f)).forEach((promise, i) => {
+                let slidePromises = slideFiles.map(f => getSlide(f, refs.get)).forEach((promise, i) => {
                     promise.then(slide => {
                         builder.onSlideReady(slide, i);
                     });
@@ -181,115 +185,3 @@
         }
     });
 })();
-// function uncompress(){
-//   let dfd = $.Deferred();
-//   fs.createReadStream(url).pipe(unzip.Extract({ path: tempDir }).on('close', () => {
-//     dfd.resolve();
-//   }));
-//   return dfd.promise;
-// }
-
-
-// class LocalRepository {
-//   static load(url, parser) {
-//     var tempDir = '.temp/' + Date.now().toString() + '/';
-//     fs.mkdirSync(tempDir);
-
-//     function relativePath(p) {
-//       return path.resolve(unzipDir + p);
-//     }
-
-//     var doc = new EnbxDocument();
-
-//     fs.createReadStream(url).pipe(unzip.Extract({ path: tempDir }).on('close', () => {
-//       var slideDir = relativePath('slides');
-//       fs.readdir(slideDir, function(err, slideFiles) {
-//         if (err) {
-//           throw err;
-//         }
-
-//         slideFiles = slideFiles.map(f => path.join(slideDir, f))
-//           .filter(f => fs.statSync(f).isFile());
-//         slideFiles.sort((s1, s2) => {
-//           s1 = s1.replace(/^.*[\\\/]/, '').replace(/^Slide_([\d]+).xml$/i, '$1');
-//           s2 = s2.replace(/^.*[\\\/]/, '').replace(/^Slide_([\d]+).xml$/i, '$1');
-//           return parseInt(s1) - parseInt(s2);
-//         });
-
-//         var boardFile = relativePath('board.xml');
-//         var refFile = relativePath('reference.xml');
-//         var checkRenturn = () => {
-//           if (doc.board && doc.refs && doc.slides.length == slideFiles.length
-//             && doc.slides.every(x => x)) {
-//             func(err, doc);
-//           }
-//         };
-//         readXmlFile(refFile, (err, model) => {
-//           if (err) {
-//             var relationships = []
-//             model = {}
-//           }
-//           else if (typeof model.relationships === 'undefined') {
-//             var relationships = []
-//           }
-//           else {
-//             var relationships = model.relationships
-//           }
-//           doc.refs = model;
-//           var dict = [];
-//           for (var r of relationships) {
-//             dict[r.id] = r.target;
-//           }
-//           doc.refs.resolve = s => {
-//             if (typeof s === 'undefined') {
-//               console.error('error')
-//             }
-//             return relativePath(dict[s.substr(5)]);
-//           }
-//           checkRenturn();
-//         });
-//         readXmlFile(boardFile, (err, model) => {
-//           doc.board = model;
-//           checkRenturn();
-//         });
-//         for (let i = 0; i < slideFiles.length; i++) {
-//           readXmlFile(slideFiles[i], (err, model) => {
-//             doc.slides[i] = model;
-//             model._f = slideFiles[i];
-//             checkRenturn();
-//           });
-//         }
-//       });
-//     }));
-//   }
-
-//   static list(repo, func) {
-//     fs.readdir(repoDir, function(err, files) {
-//       if (err) {
-//         console.log('error (' + err + ') occured while listing repository: ' + repo);
-//         return;
-//       }
-//       files = files
-//         .filter(f => fs.statSync(path.join(repoDir, f)).isFile() && f.match(/enbx$/i))
-//         .map(f => {
-//           return {
-//             name: f.substr(0, f.length - 5),
-//             path: path.join(repoDir, f)
-//           }
-//         });
-//       func(err, files);
-//     });
-//   }
-// }
-
-// class EnbxDocument {
-//   constructor() {
-//     this.slides = [];
-//     this.refs = null;
-//     this.board = null;
-//     this.loadCompleted = false;
-//   }
-// }
-
-
-

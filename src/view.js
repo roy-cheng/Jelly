@@ -76,7 +76,7 @@
             
             if(index === state.file.activeSlideIndex){
                 let paper = new Snap('#board');
-                drawSlide(state.file.slides[activeSlideIndex], paper);
+                drawSlide(state.file.slides[state.file.activeSlideIndex], paper);
             }
         }
     });
@@ -149,7 +149,7 @@ function drawGrid() {
     }
 }
 
-function render(slideModel, refs) {
+function render(slideModel) {
     var s = new Snap('#board');
     s.clear();
     var background = s.rect(0, 0, 1280, 720);
@@ -160,7 +160,7 @@ function render(slideModel, refs) {
     //drawGrid();
 }
 
-function drawElement(s, element, refs) {
+function drawElement(s, element) {
     var table = {
         Text: drawText,
         Shape: drawShape,
@@ -168,7 +168,7 @@ function drawElement(s, element, refs) {
     };
     var draw = table[element._type];
     if (typeof draw !== 'undefined')
-        draw(s, element, refs);
+        draw(s, element);
 }
 
 function drawShape(s, m) {
@@ -190,8 +190,8 @@ function drawShape(s, m) {
     }
 }
 
-function drawPicture(s, m, refs) {
-    s.image(refs.resolve(m.source), m.x, m.y, m.width, m.height);
+function drawPicture(s, m) {
+    s.image(m.source, m.x, m.y, m.width, m.height);
 }
 
 function drawText(s, m) {
@@ -223,7 +223,7 @@ function drawText(s, m) {
     }
 }
 
-function renderThumbnails(models, refs) {
+function renderThumbnails(models) {
     var $panel = $('#thumbnails ul');
 
     for (let m of models) {
@@ -240,7 +240,7 @@ function renderThumbnails(models, refs) {
         }
 
         $li.click(() => {
-            render(m, refs);
+            render(m);
             $('#thumbnails li').removeClass('active');
             $li.addClass('active');
         });
