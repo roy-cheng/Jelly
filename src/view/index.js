@@ -1,5 +1,7 @@
 'use strict';
 
+let $ = require('jquery');
+
 (function() {
   $(document).ready(function() {
     updateLayout();
@@ -63,7 +65,7 @@
     $thumbnails.height($thumbnails.parent().height());
   }
 
-  let SlideRenderer = require('../src/renderer').SlideRenderer;
+  let SlideRenderer = require('./renderer').SlideRenderer;
   let renderer = new SlideRenderer();
 
   app.subscribe(() => {

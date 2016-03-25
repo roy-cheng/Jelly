@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>Cloud</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#0095E6" offset="0%"></stop>
+            <stop stop-color="#0085CD" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Cloud" sketch:type="MSArtboardGroup">
+            <path d="M5,17 C2.23857625,17 0,14.7614237 0,12 C0,9.23857625 2.23857625,7 5,7 C5.36802057,7 5.72675463,7.03976033 6.07214085,7.11521968 L6.07214085,7.11521968 C6.48986728,4.77582068 8.53460122,3 10.9941003,3 C13.4421672,3 15.4793158,4.75935044 15.9101294,7.08263461 L15.9101294,7.08263461 C18.2369955,7.51055611 20,9.54939218 20,12 C20,14.7614237 17.7614237,17 15,17 L5,17 Z" id="云" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup"></path>
+            <path d="M0,0 L1,0 L1,1 L0,1 L0,0 Z M19,19 L20,19 L20,20 L19,20 L19,19 Z" id="点" opacity="0" fill="#D8D8D8" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>
