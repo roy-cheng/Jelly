@@ -1,144 +1,242 @@
 'use strict';
 
-var dataType = {
-    int: e => parseInt(e.innerHTML),
-    float: e => parseFloat(e.innerHTML),
-    boolean: e => e.innerHTML.toLowerCase() == 'true',
-    string: e => e.innerHTML,
-    brush: e => e.getElementsByTagName('ColorBrush')[0].innerHTML.substr(3),
-    geometry: e => e.getElementsByTagName('PresetGeometry')[0].getElementsByTagName('GeometryType')[0].innerHTML,
-    model: modelOf,
-    arrayOf: arrayOf
-};
-
-function modelOf(type, definition) {
-    if (typeof Element !== 'undefined' && type instanceof Element) {
-        return createModel(type);
+let data = {};
+(function() {  
+    function formatName(name) {
+      return name.slice(0, 1).toLowerCase() + name.slice(1);
     }
-    else {
-        return function (element) {
-            return new Model(type, element, definition);
+    class Model {
+        constructor(typeName) {
+            this._type = formatName(typeName);
+        }        
+        get type() {
+            return this._type;
         }
     }
-}
+    class ModelFactory {
+        constructor(definitions, dataConverters) {
+            this.definitions = definitions;
+            this.dataConverters = dataConverters;
+        }
+        create(xmlElement, typeName, definition, converters) {
+            if (!xmlElement) {
+                return null;
+            }
+            typeName = typeName || xmlElement.tagName;
+            definition = definition || this.definitions[typeName];
+            if (!definition) {
+                console.warn('undefined type: ' + typeName);
+                return null;
+            }
+            let model = new Model(typeName);
+            for (let i = 0; i < xmlElement.children.length; i++) {
+                let childElement = xmlElement.children[i];
+                let fieldName = formatName(childElement.tagName);
+                let fieldType = definition[fieldName];
+                if (fieldType) {
+                    let converter;
+                    if (converters) {
+                        converter = converters.getFor(fieldType);
+                    }
+                    if (!converter) {
+                        converter = this.dataConverters.getFor(fieldType);
+                    }
 
-function arrayOf(type) {
-    return function (element) {
-        return Array.prototype.slice.call(element.children).map(x => type(x));
-    }
-}
+                    if (converter) {
+                        model[fieldName] = converter(childElement, converters);
+                    }
+                    else {
+                        console.warn('undefined data type: ' + fieldType);
+                    }
+                }
+                else {
+                    console.warn('undefined field: ' + fieldName);
+                }
 
-function Model(type, xmlElement, definition) {
-    this['_type'] = type;
-
-    if (typeof xmlElement === 'undefined') {
-        return;
-    }
-
-    for (var i = 0; i < xmlElement.children.length; i++) {
-        var childElement = xmlElement.children[i];
-        var tagName = childElement.tagName;
-        var fieldName = tagName.slice(0, 1).toLowerCase() + tagName.slice(1);
-        var converter = definition[fieldName];
-
-        if (typeof converter !== 'undefined') {
-            this[fieldName] = converter(childElement);
+                if (typeof converter !== 'undefined') {
+                    this[fieldName] = converter(childElement);
+                }
+            }
+            return model;
         }
     }
-}
+    class ConverterToolkit {
+        constructor() {
+            this.converters = ConverterToolkit.defaultConverters();
+            this.add('array', t => (e, converters) => {
+                let conv = this.getFor(t);
+                return Array.prototype.slice.call(e.children).map(x => conv(x, converters));
+            });
+        }
+        add(type, converter) {
+            this.converters[type] = converter;
+        }
+        getFor(type) {
+            let typeOfArg = typeof type;
+            if (typeOfArg == 'function') {
+                return type;
+            }
 
-function defineElement() {
-    var elementBaseDefinition = {
-        id: dataType.string,
-        x: dataType.float,
-        y: dataType.float,
-        width: dataType.float,
-        height: dataType.float,
-        rotation: dataType.float,
-        isLocked: dataType.boolean,
-        canClone: dataType.boolean
+            if (typeOfArg == 'object') {
+                return this.converters[type.type](type.arguments);
+            }
+            else if (typeOfArg === 'string') {
+                return this.converters[type];
+            }
+            else {
+                return undefined;
+            }
+        }
+        static defaultConverters() {
+            return {
+                int: e => parseInt(e.innerHTML),
+                float: e => parseFloat(e.innerHTML),
+                boolean: e => e.innerHTML.toLowerCase() == 'true',
+                string: e => e.innerHTML
+            }
+        }
+    }
+    function arrayToken(type){
+        return { type: 'array', arguments: type };
+    }
+    function modelToken(typeName, definition){
+        return { type: 'model', arguments: { typeName, definition } };
+    }
+    const std = {
+        int: 'int',
+        float: 'float',
+        boolean: 'boolean',
+        string: 'string',
+        model: modelToken,
+        array: arrayToken
+    }
+
+    data.ModelFactory = ModelFactory;
+    data.ConverterToolkit = ConverterToolkit;
+    data.types = std;
+})();
+
+let definitions = {};
+(function() {
+    let dt = Object.assign({}, data.types, {
+        brush: e => e.getElementsByTagName('ColorBrush')[0].innerHTML.substr(3),
+        geometry: e => e.getElementsByTagName('PresetGeometry')[0].getElementsByTagName('GeometryType')[0].innerHTML,
+        res: 'res'
+    });
+    // console.log(data.types);
+
+    function defineElement() {
+        var elementBaseDefinition = {
+            id: dt.string,
+            x: dt.float,
+            y: dt.float,
+            width: dt.float,
+            height: dt.float,
+            rotation: dt.float,
+            isLocked: dt.boolean,
+            canClone: dt.boolean
+        };
+
+        if (arguments.length === 0) {
+            return elementBaseDefinition;
+        }
+
+        return Object.assign(elementBaseDefinition, arguments[0]);
+    }
+
+    definitions['Reference'] = {
+        relationships: dt.array(dt.model(
+            'Relationship',
+            {
+                id: dt.string,
+                target: dt.string
+            }))
     };
+    definitions['Board'] = {
+        slides: dt.array(dt.string)
+    };
+    definitions['Slide'] = {
+        id: dt.string,
+        width: dt.float,
+        height: dt.float,
+        background: dt.brush,
+        elements: dt.array(dt.model())
+    };
+    definitions['Shape'] = defineElement({
+        background: dt.brush,
+        foreground: dt.brush,
+        thickness: dt.float,
+        opacity: dt.float,
+        geometry: dt.geometry
+    });
+    definitions['Picture'] = defineElement({
+        source: dt.res,
+        pictureName: dt.string,
+        alpha: dt.float,
+        isTexture: dt.boolean,
+        displayRegion: dt.string
+    });
+    definitions['Text'] = defineElement({
+        richText: dt.model(
+            'RichText',
+            {
+                text: dt.string,
+                sizeToContent: dt.string,
+                verticalTextAlignment: dt.string,
+                textLines: dt.array(dt.model(
+                    'TextLine',
+                    {
+                        indentLevel: dt.int,
+                        lineSpacing: dt.float,
+                        textAlignment: dt.string,
+                        textMarker: dt.string,
+                        textRuns: dt.array(dt.model(
+                            'TextRun',
+                            {
+                                text: dt.string,
+                                fontSize: dt.float,
+                                fontVariants: dt.string,
+                                fontStyle: dt.string,
+                                fontWeight: dt.string,
+                                fontFamily: dt.string,
+                                background: dt.brush,
+                                foreground: dt.brush
+                            }))
+                    }))
+            })
+    });
+})();
 
-    if (arguments.length === 0) {
-        return elementBaseDefinition;
+(function() {
+    let enbxModelDefinitions = definitions;
+    let converters = new data.ConverterToolkit();
+    let factory = new data.ModelFactory(definitions, converters);
+
+    function getModelConverter(args) {
+        return (e, converters) => {
+            let name = args.typeName || e.tagName;
+            let def = args.definition || enbxModelDefinitions[name];
+            return factory.create(e, name, def, converters);
+        };
     }
-
-    return Object.assign(elementBaseDefinition, arguments[0]);
-}
-
-var definitions = [];
-definitions['Reference'] = {
-    relationships: dataType.arrayOf(dataType.model(
-        'Relationship',
-        {
-            id: dataType.string,
-            target: dataType.string
-        }))
-};
-definitions['Board'] = {
-    slides: dataType.arrayOf(dataType.string)
-};
-definitions['Slide'] = {
-    id: dataType.string,
-    width: dataType.float,
-    height: dataType.float,
-    background: dataType.brush,
-    elements: dataType.arrayOf(dataType.model)
-};
-definitions['Shape'] = defineElement({
-    background: dataType.brush,
-    foreground: dataType.brush,
-    thickness: dataType.float,
-    opacity: dataType.float,
-    geometry: dataType.geometry
-});
-definitions['Picture'] = defineElement({
-    source: dataType.string,
-    pictureName: dataType.string,
-    alpha: dataType.float,
-    isTexture: dataType.boolean,
-    displayRegion: dataType.string
-});
-definitions['Text'] = defineElement({
-    richText: dataType.model(
-        'RichText',
-        {
-            text: dataType.string,
-            sizeToContent: dataType.string,
-            verticalTextAlignment: dataType.string,
-            textLines: dataType.arrayOf(dataType.model(
-                'TextLine',
-                {
-                    indentLevel: dataType.int,
-                    lineSpacing: dataType.float,
-                    textAlignment: dataType.string,
-                    textMarker: dataType.string,
-                    textRuns: dataType.arrayOf(dataType.model(
-                        'TextRun',
-                        {
-                            text: dataType.string,
-                            fontSize: dataType.float,
-                            fontVariants: dataType.string,
-                            fontStyle: dataType.string,
-                            fontWeight: dataType.string,
-                            fontFamily: dataType.string,
-                            background: dataType.brush,
-                            foreground: dataType.brush
-                        }))
-                }))
-        })
-});
-
-function createModel(xmlElement, type) {
-    type = type || xmlElement.tagName;
-    var def = definitions[type];
-    if (typeof def === 'undefined') {
-        console.error('undefined type: ' + type);
-        return new Model(type);
+    converters.add('model', getModelConverter);
+    
+    function createEnbxModel(element, resolveResource){
+        if(resolveResource){
+            return factory.create(element, undefined, undefined, 
+            { 
+                getFor: type => {
+                    if(type === 'res'){
+                        return e => { return resolveResource(e.innerHTML); };
+                    }
+                    else{
+                        return undefined;
+                    }
+            }});       
+         }
+        else{
+            return factory.create(element);
+        }
     }
-    else {
-        return new Model(type, xmlElement, definitions[type]);
-    }
-}
-
-exports.createModel = createModel;
+    exports.createEnbxModel = createEnbxModel;
+})();
