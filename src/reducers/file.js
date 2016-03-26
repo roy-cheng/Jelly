@@ -22,12 +22,11 @@ function file(state, action) {
     }
     else {
         switch (action.type) {
-            case '~file/listLocal':
+            case '~file/listLocalFiles/request':
                 return change(state, {
-                    isLoadingLocalList: true,
-                    goingListLocal: true,
+                    isLoadingLocalList: true
                 });
-            case '~file/didListLocal':
+            case '~file/listLocalFiles/complete':
                 return change(state, {
                     isLoadingLocalList: false,
                     justListLocal: true,

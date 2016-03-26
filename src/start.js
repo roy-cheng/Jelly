@@ -1,12 +1,11 @@
 const app = require('./src/reducers');
+const actions = require('./src/actions');
 
-app.subscribe(() => {
-    var state = app.getState();
-    if (state.application.justReady) {
-        app.thenDispatch({ type: '~file/open/request', url: 'local/a.enbx' });
-        app.thenDispatch({ type: '~file/listLocal' });
-    }
-});
-
-require('./src/view');
-require('./src/document');
+(function() {
+    let view = require('./src/view');
+    view.onReady().then(() => {
+        app.dispatch(actions.ready());
+        app.thenDispatch(actions.open('local/a.enbx'));
+        app.thenDispatch(actions.listLocalFiles());
+    });
+})();

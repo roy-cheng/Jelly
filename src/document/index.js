@@ -6,23 +6,25 @@ var fs = require('fs'),
 
 let model = require('./model');
 
-function listLocalFiles(func) {
-    var repoDir = 'local'
-    fs.readdir(repoDir, function(err, files) {
-        if (err) {
-            func(err, undefined);
-            return;
-        }
-        files = files
-            .filter(f => fs.statSync(path.join(repoDir, f)).isFile() && f.match(/enbx$/i))
-            .map(f => {
-                return {
-                    name: f.substr(0, f.length - 5),
-                    path: path.join(repoDir, f)
-                }
-            });
-        func(err, files);
+function listLocalFiles() {
+    const repoDir = 'local'
+    var promise = new Promise((resolve, reject) => {
+        fs.readdir(repoDir, function(err, files) {
+            if (err) {
+                reject(err);
+            }
+            files = files
+                .filter(f => fs.statSync(path.join(repoDir, f)).isFile() && f.match(/enbx$/i))
+                .map(f => {
+                    return {
+                        name: f.substr(0, f.length - 5),
+                        path: path.join(repoDir, f)
+                    }
+                });
+            resolve(files);
+        });
     });
+    return promise;
 }
 
 function uncompress(zip, dst) {
@@ -117,62 +119,30 @@ function getSlide(slideFile, getRef) {
     return promise;
 }
 
-function load(file) {
+function load(url, callbacks) {
+    let tempDir = '.temp/' + Date.now().toString() + '/';
+    fs.mkdirSync(tempDir);
+
+    let uncompressing = uncompress(url, tempDir);
+    let loadingBoard = uncompressing.then(getBoard);
+    let loadingRefs = uncompressing.then(getRefs);
+    let loadingSlides = uncompressing.then(getSlideFiles);
+
+    Promise.all([loadingBoard, loadingRefs, loadingSlides]).then(results => {
+        let board = results[0];
+        let refs = results[1];
+        let slideFiles = results[2];
+        console.log(results);
+
+        callbacks.onBoardReady(board);
+
+        let slidePromises = slideFiles.map(f => getSlide(f, refs.get)).forEach((promise, i) => {
+            promise.then(slide => {
+                callbacks.onSlideReady(slide, i);
+            });
+        })
+    });
 }
 
-class LocalRepository {
-    static loadDocument(builder) {
-        let tempDir = '.temp/' + Date.now().toString() + '/';
-        fs.mkdirSync(tempDir);
-
-        let uncompressing = uncompress(builder.url, tempDir);
-        let loadingBoard = uncompressing.then(getBoard);
-        let loadingRefs = uncompressing.then(getRefs);
-        let loadingSlides = uncompressing.then(getSlideFiles);
-
-        Promise.all([loadingBoard, loadingRefs, loadingSlides]).then(results => {
-            let board = results[0];
-            let refs = results[1];
-            let slideFiles = results[2];
-            console.log(results);
-
-            builder.onBoardReady(board);
-
-            let slidePromises = slideFiles.map(f => getSlide(f, refs.get)).forEach((promise, i) => {
-                promise.then(slide => {
-                    builder.onSlideReady(slide, i);
-                });
-            })
-        });
-    }
-}
-
-class DocumentBuilder {
-    constructor(url) {
-        this.url = url;
-    }
-    onBoardReady(board) {
-        app.dispatch({ type: '~file/open/board', board, url: this.url });
-    }
-    onSlideReady(slide, index) {
-        app.dispatch({ type: '~file/open/slide', slide, index, url: this.url });
-    }
-}
-
-app.subscribe(() => {
-    var state = app.getState();
-    if (state.file.goingOpen) {
-        const url = state.file.url;
-        var builder = new DocumentBuilder(url);
-        LocalRepository.loadDocument(builder);
-    }
-});
-
-app.subscribe(() => {
-    var state = app.getState();
-    if (state.file.goingListLocal) {
-        listLocalFiles((err, files) => {
-            app.thenDispatch({ type: '~file/didListLocal', localFiles: files });
-        });
-    }
-});
+exports.load = load;
+exports.listLocalFiles = listLocalFiles;
