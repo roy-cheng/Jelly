@@ -1,6 +1,8 @@
 'use strict';
 
-let $ = require('jquery');
+const React = require('react-dom');
+const $ = require('jquery');
+const ui = require('./ui');
 
 function initEventListeners() {
     $('#file-list-button').click(() => {
@@ -90,18 +92,23 @@ app.subscribe(() => {
             renderer.render(slide, '#board');
         }
     }
+    if (board.justListLocal) {
+        ui.renderFileList(['1']);
+        console.error(123);
+    }
 });
 
 
 function renderFileList(files) {
-    for (let file of files) {
-        let $li = $('<li></li>').text(file.name);
-        $('#file-list-panel ul').append($li);
-        $li.click(() => {
-            app.thenDispatch(actions.open(file.path));
-            $('#file-list-panel').hide();
-        });
-    }
+    // for (let file of files) {
+        
+    //     let $li = $('<li></li>').text(file.name);
+    //     $('#file-list-panel ul').append($li);
+    //     $li.click(() => {
+    //         app.thenDispatch(actions.open(file.path));
+    //         $('#file-list-panel').hide();
+    //     });
+    // }
 }
 
 

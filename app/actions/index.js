@@ -34,7 +34,7 @@ exports.navigateTo = makeAction('~navigation/slide', 'index');
 
 exports.listLocalFiles = () => {
     doc.listLocalFiles().then(localFiles => {
-        return { type: '~file/listLocalFiles/complete', localFiles };
+        app.dispatch({ type: '~file/listLocalFiles/complete', localFiles });
     }).catch(err => {
         console.error(err);
     });
