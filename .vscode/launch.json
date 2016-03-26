@@ -10,7 +10,7 @@
       "args": [
         "."
       ],
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceRoot}/app",
       "preLaunchTask": null,
       "runtimeExecutable": null,
       "runtimeArgs": [
@@ -28,18 +28,19 @@
       "type": "chrome",
       "request": "attach",
       "port": 8315,
+      "cwd": "${workspaceRoot}/app",
       "preLaunchTask": "electron"
     },
     {
       "name": "Launch-mac",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceRoot}/src/electron.js",
+      "program": "${workspaceRoot}/app/electron.js",
       "stopOnEntry": false,
       "args": [
         "."
       ],
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceRoot}/app",
       "preLaunchTask": null,
       "runtimeExecutable": "/Applications/Electron.app/Contents/MacOS/Electron",
       "runtimeArgs": [

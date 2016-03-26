@@ -7,7 +7,7 @@ var fs = require('fs'),
 let model = require('./model');
 
 function listLocalFiles() {
-    const repoDir = 'local'
+    const repoDir = '../local'
     var promise = new Promise((resolve, reject) => {
         fs.readdir(repoDir, function(err, files) {
             if (err) {
@@ -120,7 +120,7 @@ function getSlide(slideFile, getRef) {
 }
 
 function load(url, callbacks) {
-    let tempDir = '.temp/' + Date.now().toString() + '/';
+    let tempDir = '../.temp/' + Date.now().toString() + '/';
     fs.mkdirSync(tempDir);
 
     let uncompressing = uncompress(url, tempDir);

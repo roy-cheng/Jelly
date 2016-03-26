@@ -2,9 +2,13 @@
   "name": "Jelly",
   "version": "1.0.0",
   "description": "A Roy Cheng's application",
-  "main": "./src/electron.js",
+  "main": "./app/electron.js",
   "dependencies": {
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.2.0",
     "jquery": "^2.2.2",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
     "redux": "^3.3.1",
     "snapsvg": "sethvincent/Snap.svg#a34b8af69b",
     "unzip": "^0.1.11"
