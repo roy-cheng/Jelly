@@ -7,7 +7,6 @@ var path = {
 };
 
 gulp.task('transform', function(){
-  console.log(2);
   gulp.src(path.JSX)
     .pipe(react())
     .pipe(gulp.dest(path.DEST_JSX));

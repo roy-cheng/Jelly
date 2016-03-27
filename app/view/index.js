@@ -93,30 +93,15 @@ app.subscribe(() => {
         }
     }
     if (board.justListLocal) {
-        ui.renderFileList(['1']);
-        console.error(123);
+        ui.renderFileList(board.localFiles);
     }
 });
-
-
-function renderFileList(files) {
-    // for (let file of files) {
-        
-    //     let $li = $('<li></li>').text(file.name);
-    //     $('#file-list-panel ul').append($li);
-    //     $li.click(() => {
-    //         app.thenDispatch(actions.open(file.path));
-    //         $('#file-list-panel').hide();
-    //     });
-    // }
-}
-
 
 var Snap = require('snapsvg');
 
 function createEmptyThumbnails(count) {
     var $panel = $('#thumbnails ul');
-    $panel.remove('li');
+    $('#thumbnails ul li').remove();
     for (let i = 0; i < count; i++) {
         var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
         let $li = $('<li class="slide-thumbnail"></li>');
