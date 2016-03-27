@@ -32,6 +32,11 @@ function file(state, action) {
                     justListLocal: true,
                     localFiles: action.localFiles
                 });
+            case '~navigation/slide':
+                return change(state, {
+                    activeIndex: action.index,
+                    justNavigatedl: true
+                });
         }
     }
 

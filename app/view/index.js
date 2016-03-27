@@ -94,6 +94,10 @@ app.subscribe(() => {
     if (board.justListLocal) {
         ui.renderFileList(board.localFiles);
     }
+    if (board.justNavigatedl) {
+        selectSlide(board.activeIndex);
+        renderer.render(board.slides[board.activeIndex], '#board');
+    }
 });
 
 var Snap = require('snapsvg');
@@ -113,10 +117,13 @@ function createEmptyThumbnails(count) {
 
         $li.click(() => {
             app.dispatch(actions.navigateTo(i));
-            $('#thumbnails li').removeClass('active');
-            $li.addClass('active');
         });
     }
+}
+
+function selectSlide(index){
+    $('#thumbnails li').removeClass('active');
+    $(`#thumbnails li:nth-child(${index+1})`).addClass('active');
 }
 
 function drawSlide(slide, paper) {
