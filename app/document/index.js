@@ -43,6 +43,9 @@ function readXmlFile(file, res) {
                 reject();
             }
             else {
+                if (typeof DOMParser === 'undefined') {
+                    var DOMParser = require('xmldom').DOMParser;
+                }
                 var parser = new DOMParser();
                 var xmlDom = parser.parseFromString(data, 'text/xml');
                 var m = model(xmlDom.documentElement, res);
@@ -132,13 +135,16 @@ function load(url, callbacks) {
         let board = results[0];
         let refs = results[1];
         let slideFiles = results[2];
-        console.log(results);
 
-        callbacks.onBoardReady(board);
+        if (callbacks.onSlideReady) {
+            callbacks.onBoardReady(board);
+        }
 
         let slidePromises = slideFiles.map(f => getSlide(f, refs.get)).forEach((promise, i) => {
             promise.then(slide => {
-                callbacks.onSlideReady(slide, i);
+                if (callbacks.onSlideReady) {
+                    callbacks.onSlideReady(slide, i);
+                }
             });
         })
     });

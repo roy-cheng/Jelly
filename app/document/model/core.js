@@ -4,6 +4,29 @@
 function formatName(name) {
     return name.slice(0, 1).toLowerCase() + name.slice(1);
 }
+function getChildElements(element) {
+    if (typeof element.children !== 'undefined') {
+        return element.children;
+    }
+    var children = [];
+    for (var i = 0; i < element.childNodes.length; i++) {
+        var a = element.childNodes[i].nodeType;
+        if (element.childNodes[i].nodeType === 1) {
+            children.push(element.childNodes[i]);
+        }
+    }
+    return children;
+}
+function getInnerHTML(element){
+    if (typeof element.innerHTML !== 'undefined') {
+        return element.innerHTML;
+    }
+    for (var i = 0; i < element.childNodes.length; i++) {
+        if (element.childNodes[i].nodeType === 3) {
+            return element.childNodes[i].nodeValue;
+        }
+    }
+}
 class Model {
     constructor(typeName) {
         this._type = formatName(typeName);
@@ -28,8 +51,9 @@ class ModelFactory {
             return null;
         }
         let model = new Model(typeName);
-        for (let i = 0; i < xmlElement.children.length; i++) {
-            let childElement = xmlElement.children[i];
+        let children = getChildElements(xmlElement);
+        for (let i = 0; i < children.length; i++) {
+            let childElement = children[i];
             let fieldName = formatName(childElement.tagName);
             let fieldType = definition[fieldName];
             if (fieldType) {
@@ -64,7 +88,7 @@ class ConverterToolkit {
         this.converters = ConverterToolkit.defaultConverters();
         this.add('array', t => (e, converters) => {
             let conv = this.getFor(t);
-            return Array.prototype.slice.call(e.children).map(x => conv(x, converters));
+            return Array.prototype.slice.call(getChildElements(e)).map(x => conv(x, converters));
         });
     }
     add(type, converter) {
@@ -88,10 +112,10 @@ class ConverterToolkit {
     }
     static defaultConverters() {
         return {
-            int: e => parseInt(e.innerHTML),
-            float: e => parseFloat(e.innerHTML),
-            boolean: e => e.innerHTML.toLowerCase() == 'true',
-            string: e => e.innerHTML
+            int: e => parseInt(getInnerHTML(e)),
+            float: e => parseFloat(getInnerHTML(e)),
+            boolean: e => getInnerHTML(e).toLowerCase() == 'true',
+            string: e => getInnerHTML(e)
         }
     }
 }
@@ -113,3 +137,4 @@ const std = {
 exports.ModelFactory = ModelFactory;
 exports.ConverterToolkit = ConverterToolkit;
 exports.types = std;
+exports.getInnerHTML = getInnerHTML;

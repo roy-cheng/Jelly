@@ -1,12 +1,13 @@
 'use strict';
 
 let core = require('./core');
+let $ = require('jquery');
 
 let definitions = {};
 
 let dt = Object.assign({}, core.types, {
-    brush: e => e.getElementsByTagName('ColorBrush')[0].innerHTML.substr(3),
-    geometry: e => e.getElementsByTagName('PresetGeometry')[0].getElementsByTagName('GeometryType')[0].innerHTML,
+    brush: e => core.getInnerHTML(e.getElementsByTagName('ColorBrush')[0]).substr(3),
+    geometry: e => core.getInnerHTML(e.getElementsByTagName('PresetGeometry')[0].getElementsByTagName('GeometryType')[0]),
     res: 'res'
 });
 

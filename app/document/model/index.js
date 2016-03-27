@@ -20,7 +20,7 @@ function createEnbxModel(element, resolveResource){
         { 
             getFor: type => {
                 if(type === 'res'){
-                    return e => { return resolveResource(e.innerHTML); };
+                    return e => { return resolveResource(core.getInnerHTML(e)); };
                 }
                 else{
                     return undefined;
