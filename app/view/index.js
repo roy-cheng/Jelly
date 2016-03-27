@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react-dom');
-const $ = require('jquery');
 const ui = require('./ui');
 
 function initEventListeners() {
@@ -85,8 +84,8 @@ app.subscribe(() => {
     if (board.justLoadedSlide) {
         let index = board.justUpdatedSlideIndex;
         var slide = board.slides[index];
-        let svg = $(`#thumbnails li:nth-child(${index + 1}) svg`)[0];
-        renderer.render(slide, svg);
+        let $svg = $(`#thumbnails li:nth-child(${index + 1}) svg`);
+        renderer.render(slide, $svg[0]);
 
         if (index === board.activeIndex) {
             renderer.render(slide, '#board');
@@ -104,12 +103,13 @@ function createEmptyThumbnails(count) {
     $('#thumbnails ul li').remove();
     for (let i = 0; i < count; i++) {
         var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
-        let $li = $('<li class="slide-thumbnail"></li>');
+        let $li = $('<li class="slide-thumbnail"></li>').hide();
         $panel.append($li);
         $li.append($svg);
         var s = new Snap($svg[0]);
         var background = s.rect(0, 0, 1280, 720);
         background.attr({ fill: 'white' });
+        $li.fadeIn(650);
 
         $li.click(() => {
             app.dispatch(actions.navigateTo(i));

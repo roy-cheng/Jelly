@@ -1,5 +1,6 @@
 const app = require('./reducers');
 const actions = require('./actions');
+const $ = require('jquery');
 
 (function() {
     let view = require('./view');

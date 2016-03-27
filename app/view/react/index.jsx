@@ -11,7 +11,10 @@ const FileList = require('./FileList');
 
 exports.renderFileList = files => {
     ReactDom.render(
-        <FileList files={files} onItemClick={ path => app.dispatch(actions.open(path)) } />,
+        <FileList files={files} onItemClick={ path => {
+            app.dispatch(actions.open(path)); 
+            $('#file-list-panel').hide();
+        } } />,
         document.getElementById('file-list-panel')
     );
 }  
