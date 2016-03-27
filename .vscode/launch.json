@@ -54,16 +54,24 @@
       "outDir": null
     },
     {
-      "name": "Attach",
+      "name": "Server",
       "type": "node",
-      "request": "attach",
-      "port": 5858,
-      "address": "localhost",
-      "restart": false,
+      "request": "launch",
+      "program": "${workspaceRoot}/server/bin/www",
+      "stopOnEntry": false,
+      "args": [],
+      "cwd": "${workspaceRoot}/server",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "externalConsole": false,
       "sourceMaps": false,
-      "outDir": null,
-      "localRoot": "${workspaceRoot}",
-      "remoteRoot": null
+      "outDir": null
     }
   ]
 }

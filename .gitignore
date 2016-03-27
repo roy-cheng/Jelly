@@ -3,6 +3,7 @@ node_modules
 bower_components
 .temp
 local
+server/data
 /*.DS_Store
 /.idea/.DS_Store
 /.idea/*.DS_Store
