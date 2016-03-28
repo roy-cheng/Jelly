@@ -2,6 +2,7 @@ node_modules
 .test
 bower_components
 .temp
+temp
 local
 server/data
 /*.DS_Store

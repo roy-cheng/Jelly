@@ -2,6 +2,7 @@
   "name": "jellyserver",
   "version": "0.0.0",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE.md",
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -12,6 +13,8 @@
     "express": "~4.13.1",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "multer": "^1.1.0",
+    "serve-favicon": "~2.3.0",
+    "xmldom": "^0.1.22"
   }
 }

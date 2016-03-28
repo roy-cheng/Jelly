@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A Roy Cheng's application",
   "main": "./app/electron.js",
+  "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
     "babel-preset-react": "^6.5.0",
     "babelify": "^7.2.0",
@@ -10,7 +11,6 @@
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-redux": "^4.4.1",
-    "react-tools": "^0.13.3",
     "redux": "^3.3.1",
     "snapsvg": "sethvincent/Snap.svg#a34b8af69b",
     "unzip": "^0.1.11",

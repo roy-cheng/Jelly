@@ -9,6 +9,7 @@ var multer = require('multer');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
+var res = require('./routes/res');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api', api);
+app.use('/res', res);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
