@@ -11,7 +11,7 @@ let dt = Object.assign({}, core.types, {
     if (!colorBrush) {
       return;
     }
-    core.getInnerHTML(colorBrush).substr(3)
+    return core.getInnerHTML(colorBrush).substr(3)
   },
   geometry: e => {
     let geo = e.getElementsByTagName('PresetGeometry')[0];

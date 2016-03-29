@@ -7,7 +7,7 @@ var fs = require('fs'),
 let model = require('./model');
 
 function listLocalFiles() {
-  const repoDir = '../local'
+  const repoDir = app.path('./local');
   var promise = new Promise((resolve, reject) => {
     fs.readdir(repoDir, function(err, files) {
       if (err) {
@@ -100,7 +100,6 @@ function getRefs(uncompressedDir) {
       };
       resolve(refs);
     }).catch(err => {
-      console.error(err);
       var refs = {
         get: s => {
           return undefined;
@@ -115,7 +114,6 @@ function getRefs(uncompressedDir) {
 function getSlide(slideFile, getRef) {
   var promise = new Promise((resolve, reject) => {
     readXmlFile(slideFile, getRef).then(slide => {
-      console.log(slide);
       resolve(slide);
     });
   });
@@ -171,5 +169,14 @@ function load(url, settings) {
   return promise;
 }
 
+// function loadFromCloud(url) {
+//   fetch('http://localhost:3000/api/list')
+//     .then(function(res) {
+//       return res.json();
+//     }).then(function(json) {
+//       console.log(json);
+//     });
+// }
+// loadFromCloud();
 exports.load = load;
 exports.listLocalFiles = listLocalFiles;

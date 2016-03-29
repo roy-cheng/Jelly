@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDom = require('react-dom');
-const { connect } = require('react-redux');
+const connect = require('react-redux').connect;
 
 const FileList = require('./FileList');
 

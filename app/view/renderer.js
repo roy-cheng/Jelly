@@ -78,7 +78,7 @@
       }
     }
     renderElement(model, paper) {
-      let delegate = supported[model.type ];
+      let delegate = supported[model.type];
       // console.error(model._t   ypeName);
       if (delegate) {
         delegate(model, paper, this.settings);

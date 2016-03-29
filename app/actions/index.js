@@ -1,7 +1,7 @@
 'use strict';
 
 const doc = require('../document');
-
+const path = require('path');
 
 function makeAction(type, ...argNames) {
     return function(...args) {
@@ -25,7 +25,8 @@ exports.open = url => {
         },
         onSlideReady: (slide, index) => {
             app.dispatch({ type: '~file/open/slide', slide, index, url });
-        }
+        },
+        unzip: path.join(app.path('.temp'), Date.now().toString())
     });
     return { type: '~file/open/request', url };
 }

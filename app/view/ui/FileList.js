@@ -6,7 +6,6 @@ module.exports = React.createClass({displayName: "exports",
             
                 this.props.files.map(file => {
                     return React.createElement("li", {key: file.path, onClick:  e=>{
-                        console.error(e);
                         this.props.onItemClick(file.path);
                     }}, file.name)
                 })
