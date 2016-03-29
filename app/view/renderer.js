@@ -78,13 +78,13 @@
       }
     }
     renderElement(model, paper) {
-      let delegate = supported[model.type];
+      let delegate = supported[model._type];
       // console.error(model._t   ypeName);
       if (delegate) {
         delegate(model, paper, this.settings);
       }
       else {
-        console.warn('not supported: ' + model.type);
+        console.warn('not supported: ' + model._type);
       }
     }
     static defaultSettings() {

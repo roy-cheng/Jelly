@@ -6,7 +6,7 @@ const fs = require('fs');
 
 function createRefConverter() {
   return res => {
-    var url = 'res/' + encodeURIComponent(res.replace(/^data\//i, ''));
+    var url = 'res/' + encodeURIComponent(res.substr(tempDirectory.length + 1));
     return url;
   }
 }
@@ -29,8 +29,15 @@ function save(enbxFile, name) {
 }
 
 function load(name) {
+  if (!name.match(/\.enbx$/i)) {
+    name = name + '.enbx';
+  }
+  var file = path.join(tempDirectory, name, 'doc.json');
+  if (!fs.existsSync(file)) {
+    reject('no such file: ' + name);
+    return;
+  }
   var promise = new Promise((resolve, reject) => {
-    var file = path.join(tempDirectory, name, 'doc.json');
     fs.readFile(file, 'utf8', function(err, content) {
       if (err) {
         reject(err);

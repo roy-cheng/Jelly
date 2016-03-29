@@ -2,7 +2,8 @@
 
 var fs = require('fs'),
   path = require('path'),
-  unzip = require('unzip');
+  unzip = require('unzip'),
+  fetch = require('node-fetch');
 
 let model = require('./model');
 
@@ -23,6 +24,24 @@ function listLocalFiles() {
         });
       resolve(files);
     });
+  });
+  return promise;
+}
+
+function listCloudFiles() {
+  const api = 'http://localhost:3000/api/list';
+  var promise = new Promise((resolve, reject) => {
+    fetch(api)
+      .then(function(res) {
+        return res.json();
+      }).then(function(data) {
+        let files = data.files.map(x=>{return{
+            name: x,
+            path: 'http://localhost:3000/api/file?name='+encodeURIComponent(x)
+        };
+      });
+        resolve(files);
+      });
   });
   return promise;
 }
@@ -120,7 +139,7 @@ function getSlide(slideFile, getRef) {
   return promise;
 }
 
-function load(url, settings) {
+function loadFromLocal(url, settings) {
   if (!settings) {
     settings = {};
   }
@@ -169,14 +188,45 @@ function load(url, settings) {
   return promise;
 }
 
-// function loadFromCloud(url) {
-//   fetch('http://localhost:3000/api/list')
-//     .then(function(res) {
-//       return res.json();
-//     }).then(function(json) {
-//       console.log(json);
-//     });
-// }
-// loadFromCloud();
+function modifyResourceFileds(slide){
+  slide.elements.filter(x=>x._type === 'picture').forEach(x=>
+  {x.source = 'http://localhost:3000/'+x.source;});
+}
+
+function loadFromCloud(url, settings) {
+  if (!settings) {
+    settings = {};
+  }
+  var promise = new Promise((resolve, reject) => {
+    fetch(url)
+      .then(function(res) {
+        return res.json();
+      }).then(function(board) {
+        if (settings && settings.onSlideReady) {
+          settings.onBoardReady(board);
+        }
+        if (settings && settings.onSlideReady) {
+          board.slides.forEach((slide,i)=>{
+            modifyResourceFileds(slide);
+            settings.onSlideReady(slide, i);}
+            );
+        }
+        resolve(board);
+      });
+  });
+  return promise;
+}
+
+function load(url, settings){
+  let func = loadFromLocal;
+  if(url.match(/^http/i)){
+    func = loadFromCloud;
+  }
+  return func(url, settings);
+}
+
 exports.load = load;
+exports.loadFromCloud = loadFromCloud;
+exports.loadFromLocal = loadFromLocal;
 exports.listLocalFiles = listLocalFiles;
+exports.listCloudFiles = listCloudFiles;

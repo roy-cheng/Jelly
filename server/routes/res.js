@@ -6,7 +6,6 @@ var path = require('path');
 const repoDir = 'data/repo';
 
 router.get('/*', function(req, res, next) {
-  console.log(req);
   var p = req.url.replace(/^\//, '');
   p = path.join(repoDir, decodeURIComponent(p)) ;
   fs.readFile(p, (err, content) => {

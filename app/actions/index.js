@@ -34,10 +34,19 @@ exports.open = url => {
 exports.navigateTo = makeAction('~navigation/slide', 'index');
 
 exports.listLocalFiles = () => {
-    doc.listLocalFiles().then(localFiles => {
-        app.dispatch({ type: '~file/listLocalFiles/complete', localFiles });
+    doc.listLocalFiles().then(files => {
+        app.dispatch({ type: '~file/listFiles/complete', files, from: 'local' });
     }).catch(err => {
         console.error(err);
     });
-    return { type: '~file/listLocalFiles/request' };
+    return { type: '~file/listFiles/request' };
+};
+
+exports.listCloudFiles = () => {
+    doc.listCloudFiles().then(files => {
+        app.dispatch({ type: '~file/listFiles/complete', files, from: 'cloud' });
+    }).catch(err => {
+        console.error(err);
+    });
+    return { type: '~file/listFiles/request' };
 };

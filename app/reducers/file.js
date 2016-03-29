@@ -22,15 +22,15 @@ function file(state, action) {
     }
     else {
         switch (action.type) {
-            case '~file/listLocalFiles/request':
+            case '~file/listFiles/request':
                 return change(state, {
                     isLoadingLocalList: true
                 });
-            case '~file/listLocalFiles/complete':
+            case '~file/listFiles/complete':
                 return change(state, {
                     isLoadingLocalList: false,
                     justListLocal: true,
-                    localFiles: action.localFiles
+                    localFiles: action.files
                 });
             case '~navigation/slide':
                 return change(state, {
