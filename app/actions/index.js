@@ -66,3 +66,6 @@ exports.sync = () => {
   }
   return { type: '~file/upload/request' };
 };
+
+exports.prevSlide = makeAction('~navigation/prev', 'force');
+exports.nextSlide = makeAction('~navigation/next', 'force');

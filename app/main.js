@@ -23,7 +23,7 @@ const actions = require('./actions');
 
   view.onReady().then(() => {
     app.dispatch(actions.ready());
-    app.thenDispatch(actions.open(app.path('local/1.enbx')));
+    app.thenDispatch(actions.open(app.path('local/animation.enbx')));
     // app.thenDispatch(actions.listLocalFiles());
     // app.thenDispatch(actions.open('http://localhost:3000/api/file?name=DLL%20PROBING%201.enbx'));
     // app.thenDispatch(actions.listCloudFiles());

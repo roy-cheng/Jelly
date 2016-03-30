@@ -1,5 +1,7 @@
 'use strict';
 
+require('./animation');
+
 const React = require('react-dom');
 const ui = require('./ui');
 
@@ -25,7 +27,15 @@ function initEventListeners() {
     if (event.keyCode === 27) {
       app.dispatch(actions.editView());
       maximize(false);
-    }
+    }   
+    // LeftArrow, UpArrow, PgUp
+    if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 33) {
+      app.dispatch(actions.prevSlide());
+    } 
+    // RightArrow, DownArrow, PgDn
+    if (event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 34) {
+      app.dispatch(actions.nextSlide());
+    } 
   });
 
   window.onresize = function() {
@@ -67,8 +77,8 @@ function maximize(max) {
     $('#board').addClass('fullscreen');
     if (!win.isMaximized()) {
       win.maximize();
-      win.setFullScreen(true);
     }
+    win.setFullScreen(true);
   }
   else {
     $('#board').removeClass('fullscreen');
@@ -96,9 +106,10 @@ let renderer = new SlideRenderer();
 
 app.subscribe(() => {
   var board = app.getState().file;
+  var navi = app.getState().navigation;
   if (board.justUpdatedSlideCount) {
     createEmptyThumbnails(board.slides.length);
-    $(`#thumbnails li:nth-child(${board.activeIndex + 1})`).addClass('active');
+    $(`#thumbnails li:nth-child(${navi.activeIndex + 1})`).addClass('active');
   }
   if (board.justLoadedSlide) {
     let index = board.justUpdatedSlideIndex;
@@ -106,16 +117,16 @@ app.subscribe(() => {
     let $svg = $(`#thumbnails li:nth-child(${index + 1}) svg`);
     renderer.render(slide, $svg[0]);
 
-    if (index === board.activeIndex) {
+    if (index === navi.activeIndex) {
       renderer.render(slide, '#board');
     }
   }
   if (board.justListLocal) {
     ui.renderFileList(board.localFiles);
   }
-  if (board.justNavigatedl) {
-    selectSlide(board.activeIndex);
-    renderer.render(board.slides[board.activeIndex], '#board');
+  if (navi.justNavigated) {
+    selectSlide(navi.activeIndex);
+    renderer.render(board.slides[navi.activeIndex], '#board');
   }
 });
 

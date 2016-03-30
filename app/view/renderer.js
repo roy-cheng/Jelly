@@ -6,7 +6,8 @@
   const supported = {
 
     picture: (m, paper) => {
-      paper.image(m.source, m.x, m.y, m.width, m.height);
+      var pic = paper.image(m.source, m.x, m.y, m.width, m.height);
+      return pic;
     },
 
     text: (m, paper) => {
@@ -57,9 +58,10 @@
           strokeWidth: m.thickness
         });
       }
+      return shape;
     }
   }
-  
+
   class SlideRenderer {
     constructor(target, settings) {
       this.defaultTarget = target;
@@ -71,7 +73,10 @@
       let background = paper.rect(0, 0, this.settings.width, this.settings.height);
       background.attr({ fill: model.background || this.settings.background });
       for (var element of model.elements) {
-        this.renderElement(element, paper, this.settings);
+        var visual = this.renderElement(element, paper, this.settings);
+        if (visual) {
+          visual.attr({ id: element.id });
+        }
       }
       if (this.settings.showGrid) {
         this.drawGrid(paper);
@@ -81,7 +86,7 @@
       let delegate = supported[model._type];
       // console.error(model._t   ypeName);
       if (delegate) {
-        delegate(model, paper, this.settings);
+        return delegate(model, paper, this.settings);
       }
       else {
         console.warn('not supported: ' + model._type);
@@ -130,5 +135,5 @@
       }
     }
   }
-exports.SlideRenderer = SlideRenderer;
+  exports.SlideRenderer = SlideRenderer;
 })();

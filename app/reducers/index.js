@@ -4,8 +4,9 @@ const redux = require('redux');
 
 const root = require('./root');
 const file = require('./file');
+const navigation = require('./navigation');
 
-const parts = redux.combineReducers({ application: root, file });
+const parts = redux.combineReducers({ application: root, file, navigation });
 
 
 const reducers = (state, action) => {

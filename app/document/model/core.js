@@ -31,7 +31,7 @@ class Model {
   constructor(typeName) {
     this._type = formatName(typeName);
   }
-  get type() {
+  getType() {
     return this._type;
   }
 }

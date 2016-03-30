@@ -32,11 +32,6 @@ function file(state, action) {
           justListLocal: true,
           localFiles: action.files
         });
-      case '~navigation/slide':
-        return change(state, {
-          activeIndex: action.index,
-          justNavigatedl: true
-        });
       case '~file/upload/request':
         return change(state, {
           isUploading: true
@@ -70,8 +65,7 @@ function fileOpen(state, action) {
       let slides = new Array(action.board.slides.length);
       return change(state, {
         slides: slides,
-        justUpdatedSlideCount: true,
-        activeIndex: 0
+        justUpdatedSlideCount: true
       });
     case '~file/open/slide':
       state.slides[action.index] = action.slide;

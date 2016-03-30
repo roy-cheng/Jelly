@@ -33,7 +33,8 @@ function defineElement() {
     height: dt.float,
     rotation: dt.float,
     isLocked: dt.boolean,
-    canClone: dt.boolean
+    canClone: dt.boolean,
+    animations: dt.array(dt.model())
   };
 
   if (arguments.length === 0) {
@@ -51,6 +52,19 @@ definitions['Reference'] = {
       target: dt.string
     }))
 };
+
+definitions['Animation'] = {
+  type: dt.string,
+  id: dt.string,
+  number: dt.int,
+  category: dt.string,
+  trigger: dt.string,
+  duration: dt.int,
+  accelerationRatio: dt.float,
+  decelerationRatio: dt.float,
+  orientation: dt.string,
+  path: dt.string
+};
 definitions['Board'] = {
   slides: dt.array(dt.string)
 };
@@ -59,7 +73,8 @@ definitions['Slide'] = {
   width: dt.float,
   height: dt.float,
   background: dt.brush,
-  elements: dt.array(dt.model())
+  elements: dt.array(dt.model()),
+  animationOrders: dt.array(dt.string)
 };
 definitions['Shape'] = defineElement({
   background: dt.brush,
