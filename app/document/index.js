@@ -3,7 +3,8 @@
 var fs = require('fs'),
   path = require('path'),
   unzip = require('unzip'),
-  fetch = require('node-fetch');
+  fetch = require('node-fetch'),
+  request = require('request');
 
 let model = require('./model');
 
@@ -225,8 +226,25 @@ function load(url, settings){
   return func(url, settings);
 }
 
+function upload(file){
+  var promise = new Promise((resolve, reject) => {
+    var req = request.post('http://localhost:3000/api/upload', function (err, res, body) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(body);
+      }
+    });
+    var form = req.form();
+    var a = fs.createReadStream(file);
+    form.append('enbx', a);
+  });
+  return promise;
+}
+
 exports.load = load;
 exports.loadFromCloud = loadFromCloud;
 exports.loadFromLocal = loadFromLocal;
 exports.listLocalFiles = listLocalFiles;
 exports.listCloudFiles = listCloudFiles;
+exports.upload = upload;

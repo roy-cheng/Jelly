@@ -50,3 +50,19 @@ exports.listCloudFiles = () => {
     });
     return { type: '~file/listFiles/request' };
 };
+
+exports.sync = () => {
+  let file = app.getState().file;
+  if(file.source === 'local'){
+    doc.upload(file.url).then(()=>{
+    app.dispatch({ type: '~file/upload/complete' });
+    });
+  }
+  else if(file.source === 'cloud'){
+    app.dispatch(actions.open(file.url));
+  }
+  else{
+    throw 'not supported: ' + source;
+  }
+  return { type: '~file/upload/request' };
+};
