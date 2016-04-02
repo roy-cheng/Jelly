@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
-    <title>Picture</title>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4 (15575) - http://www.bohemiancoding.com/sketch -->
+    <title>多媒体_24</title>
     <desc>Created with Sketch.</desc>
-    <defs>
-        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
-            <stop stop-color="#7ECF4C" offset="0%"></stop>
-            <stop stop-color="#6FB543" offset="100%"></stop>
-        </linearGradient>
-    </defs>
-    <g id="Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Picture" sketch:type="MSArtboardGroup">
-            <path d="M0,3.00087166 C0,2.4481055 0.455305576,2 0.99180311,2 L19.0081969,2 C19.5559546,2 20,2.44463086 20,3.00087166 L20,16.9991283 C20,17.5518945 19.5446944,18 19.0081969,18 L0.99180311,18 C0.444045377,18 0,17.5553691 0,16.9991283 L0,3.00087166 Z M7.25,10 L11,14 L14,12 L18,16 L2,16 L7.25,10 Z M14,9 C15.1045695,9 16,8.1045695 16,7 C16,5.8954305 15.1045695,5 14,5 C12.8954305,5 12,5.8954305 12,7 C12,8.1045695 12.8954305,9 14,9 Z" id="Pic" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup"></path>
-            <path d="M0,0 L1,0 L1,1 L0,1 L0,0 Z M19,19 L20,19 L20,20 L19,20 L19,19 Z" id="点-copy" opacity="0" fill="#D8D8D8" sketch:type="MSShapeGroup"></path>
+    <defs></defs>
+    <g id="新界面icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="多媒体_24" sketch:type="MSArtboardGroup" fill="#E6A15C">
+            <path d="M0,4.99742191 C0,3.89427625 0.901627257,3 2.00086422,3 L20.9991358,3 C22.1041826,3 23,3.89092539 23,4.99742191 L23,20.0025781 C23,21.1057238 22.0983727,22 20.9991358,22 L2.00086422,22 C0.895817426,22 0,21.1090746 0,20.0025781 L0,4.99742191 Z M7,11 C8.1045695,11 9,10.1045695 9,9 C9,7.8954305 8.1045695,7 7,7 C5.8954305,7 5,7.8954305 5,9 C5,10.1045695 5.8954305,11 7,11 Z M3,19 L20,18.9999997 C20,18.9999997 19.8459672,15.3465507 18.6770413,13.6569416 C17.5081155,11.9673326 14.1949841,11.1073988 12.760676,13.3645134 C10.7201353,16.0604819 9.88330078,16.746521 9.01818848,16.7546387 C8.47894287,16.7526245 8.15826416,15.010437 6.64813232,14.9921265 C3.34002686,15.0300293 3,19 3,19 Z" id="icon_多媒体" sketch:type="MSShapeGroup"></path>
         </g>
     </g>
 </svg>

@@ -139,6 +139,7 @@ function createEmptyThumbnails(count) {
     var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
     let $li = $('<li class="slide-thumbnail"></li>').hide();
     $panel.append($li);
+    $li.append($(`<p>${i+1}</p>`));
     $li.append($svg);
     var s = new Snap($svg[0]);
     var background = s.rect(0, 0, 1280, 720);
