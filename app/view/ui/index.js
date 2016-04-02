@@ -15,6 +15,6 @@ exports.renderFileList = files => {
             app.dispatch(actions.open(path)); 
             $('#file-list-panel').hide();
         }}),
-        document.getElementById('file-list-panel')
+        document.getElementById('file-list')
     );
 }  

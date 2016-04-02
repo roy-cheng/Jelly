@@ -17,6 +17,11 @@ function initEventListeners() {
     $('#file-list-panel').hide();
   });
 
+  $('#display-button').click(() => {
+      app.dispatch(actions.displayView());
+      maximize(true);
+  });
+
   $('html').keydown(function(event) {
     // F5
     if (event.keyCode === 116) {

@@ -81,7 +81,6 @@ ul {
   background: #ffffff;
 }
 #display-button-container{
-  float: left;
   position: absolute;
   left: 0px;
   -webkit-align-self: flex-start;
@@ -89,10 +88,12 @@ ul {
   margin: 3 0;
   height: 46px;
   border-left: 1px solid #cccccc;
+}
+.hightlight-button-container{
   display: flex;
   align-items: center;
 }
-#display-button{
+.hightlight-button{
   background: #65ad57;
   height: 30px;
   width: 100px;
@@ -103,16 +104,16 @@ ul {
   font-size: 12px;
   border-radius: 4px;
 }
-#display-button:hover{
+.hightlight-button:hover{
   background: #6dba5d;
 }
-#display-button:active{
+.hightlight-button:active{
   background: #5ea150;
 }
-#display-button img{
+.hightlight-button img{
   margin: 0 8px 0 6px;
 }
-#display-button div{
+.hightlight-button span{
   cursor: arrow;
 }
 .button-bg{
@@ -182,7 +183,7 @@ ul {
 .fullscreen{
     margin:0;
     padding:0;
-    position: absolute;
+    position: fixed;
     top:0;
     left:0;
     width:100%;
@@ -190,29 +191,84 @@ ul {
 }
 #file-list-panel{
     position: absolute;
-    top: 55px;
+    top: 60px;
     left: 6px;
-    width:240px;
-    max-height:700px;
-    min-height:300px;
+    width:686px;
+    height:500px;
     background: white;
-    border: 1px solid #aaa;
-    border-radius: 3px;
+    border: 1px solid #cccccc;
     display: none;
 }
+#file-list-panel-header{
+    background: #eeeeee;
+    height: 77px;
+}
+#file-list-panel-title-bar{
+    height: 24px;
+    position: relative;
+    font-size: 12px;
+}
+#file-list-panel-title-bar img{
+    display: inline-block;
+}
+#file-list-panel-title-bar-left{
+    position: absolute;
+    left: 7px;
+    top: -4px;
+}
+#file-list-panel-title-bar-left img{
+    width: 16px;
+    height: 16px;
+}
+#file-list-panel-title-bar-left span{
+    position: relative;
+    left: 1px;
+    top: -4px;
+}
+#file-list-panel-title-bar-right{
+    position: absolute;
+    right: 7px;
+    top: 1px;
+}
+#file-list-panel-title-bar-right img{
+    position: relative;
+    top: -5px;
+}
+#file-list-panel-title-bar-right span{
+    position: relative;
+    top: -9px;
+    left: 1px;
+    border-right: 1px solid #888888;
+    padding-right: 10px;
+}
+#file-list-panel-minimize, #file-list-panel-close{
+    width: 16px;
+    height: 16px;
+    margin-left:14px;
+    margin-right:4px;
+}
+#file-list-panel-top-bar{
+    height: 53px;
+    position: relative;
+}
+#new-button-container{
+    position: absolute;
+    right: 0px;
+    bottom: 8px;
+}
 #file-list-panel li{
-    height:30px;
+    height:52px;
     background: white;
-    border: 1px solid #aaa;
-    font-size: 16px;
+    border-bottom: 1px solid #cccccc;
+    font-size: 14px;
     margin:0 auto;
     padding:5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: hand;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: hand;
+    color: #333333;
 }
 #file-list-panel li:hover{
-    height:30px;
-    background: dodgerblue;
+    background: #f3f3f6;
 }
