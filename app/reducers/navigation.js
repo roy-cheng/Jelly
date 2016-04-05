@@ -32,11 +32,11 @@ function reduce(state, action) {
         justNavigated: true
       });
     case '~navigation/prev':
-        return change(state, {
-          activeIndex: Math.max(state.activeIndex - 1, 0),
-          justNavigated: true,
-          animationIndex: 0
-        });
+      return change(state, {
+        activeIndex: Math.max(state.activeIndex - 1, 0),
+        justNavigated: true,
+        animationIndex: 0
+      });
     case '~navigation/next':
       if (state.view === 'edit' || action.force) {
         return change(state, {

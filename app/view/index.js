@@ -2,6 +2,8 @@
 
 const React = require('react-dom');
 const ui = require('./ui');
+var remote = require('remote');
+var win = remote.getCurrentWindow();
 
 function initEventListeners() {
   $('#file-list-button').click(() => {
@@ -16,9 +18,39 @@ function initEventListeners() {
   });
 
   $('#display-button').click(() => {
-      app.dispatch(actions.displayView());
-      maximize(true);
+    app.dispatch(actions.displayView());
+    maximize(true);
   });
+
+  $('#system-close').click(() => {
+    win.close();
+  });
+
+  $('#system-min').click(() => {
+    win.minimize();
+  });
+
+  $('#system-max').click(() => {
+    win.maximize();
+  });
+
+  $('#system-restore').click(() => {
+    win.restore();
+  });
+
+  win.on('maximize', onMax);
+  
+  function onMax(){
+    $('#system-max').hide();
+    $('#system-restore').show();
+  }
+
+  win.on('unmaximize', onUnmax);
+ 
+  function onUnmax(){
+    $('#system-max').show();
+    $('#system-restore').hide();
+  }
 
   $('html').keydown(function(event) {
     // F5
@@ -30,15 +62,15 @@ function initEventListeners() {
     if (event.keyCode === 27) {
       app.dispatch(actions.editView());
       maximize(false);
-    }   
+    }
     // LeftArrow, UpArrow, PgUp
     if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 33) {
       app.dispatch(actions.prevSlide());
-    } 
+    }
     // RightArrow, DownArrow, PgDn
     if (event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 34) {
       app.dispatch(actions.nextSlide());
-    } 
+    }
   });
 
   window.onresize = function() {
@@ -124,6 +156,9 @@ app.subscribe(() => {
       renderer.render(slide, '#board');
     }
   }
+  if (board.goingOpen) {
+    $('#title span').text(board.name);
+  }
   if (board.justListLocal) {
     ui.renderFileList(board.localFiles);
   }
@@ -142,7 +177,7 @@ function createEmptyThumbnails(count) {
     var $svg = $('<svg viewBox="0 0 1280 720"></svg>');
     let $li = $('<li class="slide-thumbnail"></li>').hide();
     $panel.append($li);
-    $li.append($(`<p>${i+1}</p>`));
+    $li.append($(`<p>${i + 1}</p>`));
     $li.append($svg);
     var s = new Snap($svg[0]);
     var background = s.rect(0, 0, 1280, 720);

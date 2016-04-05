@@ -1,112 +1,121 @@
 <html>
 
 <head>
-    <meta content="text/html; charset=utf-8" http-equiv="content-type">
-    <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
-    <script type="text/javascript" src="main.js"></script>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
+  <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
+  <script type="text/javascript" src="main.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <div id="header">
-            <div id="toolbar">
-                <div id="left-toolbar" class="left-column">
-                    <div class="toolbar-button" id="file-list-button">
-                        <img class="button-bg" src="assets/img/Cloud.svg" alt="云课件" />
-                        <div>云课件</div>
-                    </div>
-                    <div class="toolbar-button" id="sync-button">
-                        <img class="button-bg" src="assets/img/Sync.svg" alt="同步" />
-                        <div>同步</div>
-                    </div>
-                </div>
-                <div id="center-toolbar" class="center-column">
-                    <div id="display-button-container" class="hightlight-button-container">
-                        <div id="display-button" class="hightlight-button">
-                            <img src="assets/img/display.svg" />
-                            <span>开始授课</span></div>
-                    </div>
-                    <div class="toolbar-button">
-                        <img class="button-bg" src="assets/img/Text.svg" alt="文本" />
-                        <div>文本</div>
-                    </div>
-                    <div class="toolbar-button">
-                        <img class="button-bg" src="assets/img/Shape.svg" alt="形状" />
-                        <div>形状</div>
-                    </div>
-                    <div class="toolbar-button">
-                        <img class="button-bg" src="assets/img/Picture.svg" alt="图片" />
-                        <div>图片</div>
-                    </div>
-                    <div class="toolbar-button">
-                        <img class="button-bg" src="assets/img/mindmap.svg" alt="思维导图" />
-                        <div>思维导图</div>
-                    </div>
-                </div>
-                <div id="right-toolbar" class="right-column">
-                    <div class="toolbar-button">
-                        <img class="button-bg" src="assets/img/attribute.svg" alt="属性" />
-                        <div>属性</div>
-                    </div>
-                    <div class="toolbar-button">
-                        <img class="button-bg" src="assets/img/animation.svg" alt="动画" />
-                        <div>动画</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="content">
-            <div id="slide-panel" class="left-column">
-                <ul id="thumbnails">
-                    <ul>
-            </div>
-            <div id="workspace" class="center-column">
-                <div id="board-container">
-                    <svg id="board" viewBox="0 0 1280 720">
-                        <use xlink:href="#slide" />
-                    </svg>
-                </div>
-                <svg class="hide">
-                    <symbol id="slide">
-                        <g fill="white">
-                            <rect width="1280" height="720" />
-                        </g>
-                    </symbol>
-                </svg>
-            </div>
-            <div id="property-panel" class="right-column"></div>
-        </div>
-        <div id="footer">
-        </div>
+  <div id="app">
+    <div id="titlebar">
+      <div id="logo"><img src="assets/img/logo.svg" /><span>希沃教学白板</span></div>
+      <p id="title"><img src="assets/img/doc.svg" /><span>课件名称</span></p>
+      <p id="system-buttons">
+        <img src="assets/img/system-min.svg" id="system-min"/>
+        <img src="assets/img/system-max.svg" id="system-max"/>
+        <img src="assets/img/system-restore.svg" id="system-restore"/>
+        <img src="assets/img/system-close.svg" id="system-close"/></p>
     </div>
-    <div id="file-list-panel">
-        <div id="file-list-panel-header">
-            <div id="file-list-panel-title-bar">
-                <div id="file-list-panel-title-bar-left">
-                    <p>
-                        <img src="assets/img/Cloud.svg" />
-                        <span>希沃云课件</span>
-                    </p>
-                </div>
-                <div id="file-list-panel-title-bar-right">
-                    <p>
-                        <img src="assets/img/ulink.svg" />
-                        <span>制作快联</span>
-                        <img id="file-list-panel-minimize" src="assets/img/minimize.svg" />
-                        <img id="file-list-panel-close" src="assets/img/close.svg" />
-                    </p>
-                </div>
-            </div>
-            <div id="file-list-panel-top-bar">
-                <div id="new-button-container" class="hightlight-button-container">
-                    <div id="new-button" class="hightlight-button">
-                        <img src="assets/img/add.svg" />
-                        <span>新建课件</span></div>
-                </div>
-            </div>
-            <div id=file-list></div>
+    <div id="header">
+      <div id="toolbar">
+        <div id="left-toolbar" class="left-column">
+          <div class="toolbar-button" id="file-list-button">
+            <img class="button-bg" src="assets/img/Cloud.svg" alt="云课件" />
+            <div>云课件</div>
+          </div>
+          <div class="toolbar-button" id="sync-button">
+            <img class="button-bg" src="assets/img/Sync.svg" alt="同步" />
+            <div>同步</div>
+          </div>
         </div>
+        <div id="center-toolbar" class="center-column">
+          <div id="display-button-container" class="hightlight-button-container">
+            <div id="display-button" class="hightlight-button">
+              <img src="assets/img/display.svg" />
+              <span>开始授课</span></div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="assets/img/Text.svg" alt="文本" />
+            <div>文本</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="assets/img/Shape.svg" alt="形状" />
+            <div>形状</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="assets/img/Picture.svg" alt="图片" />
+            <div>图片</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="assets/img/mindmap.svg" alt="思维导图" />
+            <div>思维导图</div>
+          </div>
+        </div>
+        <div id="right-toolbar" class="right-column">
+          <div class="toolbar-button">
+            <img class="button-bg" src="assets/img/attribute.svg" alt="属性" />
+            <div>属性</div>
+          </div>
+          <div class="toolbar-button">
+            <img class="button-bg" src="assets/img/animation.svg" alt="动画" />
+            <div>动画</div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div id="content">
+      <div id="slide-panel" class="left-column">
+        <ul id="thumbnails">
+          <ul>
+      </div>
+      <div id="workspace" class="center-column">
+        <div id="board-container">
+          <svg id="board" viewBox="0 0 1280 720">
+            <use xlink:href="#slide" />
+          </svg>
+        </div>
+        <svg class="hide">
+          <symbol id="slide">
+            <g fill="white">
+              <rect width="1280" height="720" />
+            </g>
+          </symbol>
+        </svg>
+      </div>
+      <div id="property-panel" class="right-column"></div>
+    </div>
+    <div id="footer">
+    </div>
+  </div>
+  <div id="file-list-panel">
+    <div id="file-list-panel-header">
+      <div id="file-list-panel-title-bar">
+        <div id="file-list-panel-title-bar-left">
+          <p>
+            <img src="assets/img/Cloud.svg" />
+            <span>希沃云课件</span>
+          </p>
+        </div>
+        <div id="file-list-panel-title-bar-right">
+          <p>
+            <img src="assets/img/ulink.svg" />
+            <span>制作快联</span>
+            <img id="file-list-panel-minimize" src="assets/img/minimize.svg" />
+            <img id="file-list-panel-close" src="assets/img/close.svg" />
+          </p>
+        </div>
+      </div>
+      <div id="file-list-panel-top-bar">
+        <div id="new-button-container" class="hightlight-button-container">
+          <div id="new-button" class="hightlight-button">
+            <img src="assets/img/add.svg" />
+            <span>新建课件</span></div>
+        </div>
+      </div>
+      <div id=file-list></div>
+    </div>
+  </div>
 </body>
 
 </html>

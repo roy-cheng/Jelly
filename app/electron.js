@@ -15,7 +15,7 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1600, height: 900, title: 'EasiNote'});
+  mainWindow = new BrowserWindow({width: 1600, height: 900, title: 'EasiNote', frame: false});
 
   mainWindow.setMenu(null);
 
@@ -23,7 +23,7 @@ function createWindow () {
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

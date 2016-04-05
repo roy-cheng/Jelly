@@ -47,13 +47,21 @@ function file(state, action) {
   return change(state);
 }
 
+function getDocName(url) {
+  if (url.match(/^http/i)) {
+    return decodeURIComponent(url.replace(/^.*=/, ''));
+  }
+  return url.replace(/^.*[\\\/]/, '');
+}
+
 function fileOpen(state, action) {
   if (action.type === '~file/open/request') {
     return change(state, {
       goingOpen: true,
       isLoading: true,
       url: action.url,
-      source: action.url.match(/^http/i) ? 'cloud' : 'local'
+      source: action.url.match(/^http/i) ? 'cloud' : 'local',
+      name: getDocName(action.url)
     });
   }
   if (state.url !== action.url) {

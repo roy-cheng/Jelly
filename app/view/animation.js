@@ -9,7 +9,7 @@ function getVisual(element) {
 }
 
 function getElementByAnimationId(id, slide) {
-  for (let element of slide.elements) {
+  for (let element of slide.elements.filter(x=>x.animations)) {
     for (let animation of element.animations) {
       if (animation.id === id) {
         return [element, animation];
