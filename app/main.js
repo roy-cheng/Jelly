@@ -7,6 +7,12 @@ $(document).ready(function() {
     if (event.keyCode === 82 && event.altKey) {
       location.reload();
     }
+    // Alt+D
+    if (event.keyCode === 68 && event.altKey) {
+      var remote = require('remote');
+      var win = remote.getCurrentWindow();
+      win.webContents.openDevTools();
+    }
   });
 });
 
@@ -23,7 +29,7 @@ const actions = require('./actions');
 
   view.onReady().then(() => {
     app.dispatch(actions.ready());
-    app.thenDispatch(actions.open(app.path('local/a.enbx')));
+    app.thenDispatch(actions.open(app.path('local/animation.enbx')));
     // app.thenDispatch(actions.listLocalFiles());
     // app.thenDispatch(actions.open('http://localhost:3000/api/file?name=DLL%20PROBING%201.enbx'));
     // app.thenDispatch(actions.listCloudFiles());

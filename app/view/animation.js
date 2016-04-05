@@ -155,7 +155,7 @@ app.subscribe(() => {
   }
   var slide = board.slides[navi.activeIndex];
   if (navi.justNavigated) {
-    reset(slide);
+    prepare(slide);
   }
   if (navi.goingToNextAnimation) {
     var aid = getValidAnimations(slide)[navi.animationIndex - 1];
@@ -164,13 +164,11 @@ app.subscribe(() => {
       play(slide, index);
     }
     else {
-      app.dispatch(actions.nextSlide(true))
+      app.thenDispatch(actions.nextSlide(true))
     }
   }
   if (navi.goingToDisplayView) {
-    for (var s of board.slides) {
-      prepare(s);
-    }
+    prepare(slide);
   }
   if (navi.goingToEditView) {
     for (var s of board.slides) {

@@ -1,7 +1,5 @@
 'use strict';
 
-require('./animation');
-
 const React = require('react-dom');
 const ui = require('./ui');
 
@@ -173,3 +171,5 @@ function drawSlide(slide, paper) {
 }
 
 exports.onReady = onReady;
+
+require('./animation');

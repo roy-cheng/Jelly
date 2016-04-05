@@ -11,6 +11,23 @@ ul {
     margin:0;
     padding:0;
 }
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+ 
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #b2b4b8;
+}
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 10px;
+    background: #9d9ea1;
+}
 
 #app {
   height: 100%;
@@ -145,6 +162,10 @@ ul {
   display:none; 
 }
 #thumbnails{
+    margin:0;
+    overflow: hidden;
+}
+#thumbnails:hover{
     margin:0;
     overflow: auto;
 }
